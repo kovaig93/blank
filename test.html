@@ -105,6 +105,18 @@
             </a>
         </div>
 
+        <div class="hero-btns animate-in delay-3" style="margin-top: 15px;">
+            {% if store.categories|length > 0 %}
+                <a href="/category/{{ store.categories[0].id }}" class="btn btn-primary" style="background: linear-gradient(135deg, #22c55e 0%, #15803d 100%); border-color: #16a34a; box-shadow: 0 8px 25px rgba(34, 197, 94, 0.35);">
+                    <i class="fas fa-campground"></i> Farms &amp; Bases
+                </a>
+            {% else %}
+                <a href="#" class="btn btn-primary" style="background: linear-gradient(135deg, #22c55e 0%, #15803d 100%); border-color: #16a34a; box-shadow: 0 8px 25px rgba(34, 197, 94, 0.35);">
+                    <i class="fas fa-campground"></i> Farms &amp; Bases
+                </a>
+            {% endif %}
+        </div>
+
         <div class="animate-in delay-3">
             <div class="hero-separator"></div>
             
