@@ -1,1306 +1,311 @@
-<!DOCTYPE html>
-<html lang="{{ store.locale }}">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ store.name }} | {{ page.title }}</title>
-    <meta name="description" content="{{ store.description }}">
-    <link rel="shortcut icon" href="{{ store.favicon }}">
-    
-    <!-- PERFORMANCE: Preconnect to critical domains -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="preconnect" href="https://js.tebex.io">
-    <link rel="dns-prefetch" href="https://js.tebex.io">
+{% extends "layout.html" %}
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
-    
-    <!-- Custom CSS -->
-    <link href="{{ asset('style.css') }}" rel="stylesheet">
-    
-    <!-- Tebex Core JS -->
-    <script src="https://js.tebex.io/v/1.js"></script>
+{% block content %}
 
-    <!-- NEW: LEGAL BAR STYLES -->
-    <style>
-        .tebex-legal-wrapper {
-            border-top: 1px solid rgba(255,255,255,0.05);
-            margin-top: 40px;
-            padding-top: 25px;
-            text-align: center;
-        }
-        .legal-disclaimer {
-            font-size: 0.75rem;
-            color: var(--text-muted); 
-            opacity: 0.6;
-            margin-bottom: 15px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.5;
-        }
-        .legal-links-list {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-        }
-        .legal-links-list a {
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: color 0.2s;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
-        .legal-links-list a:hover {
-            color: var(--text-main, #fff);
-            text-shadow: 0 0 10px rgba(255,255,255,0.2);
-        }
+<!-- ========================================= -->
+<!-- CONFIG: BADGES ANZEIGE (HIER EINSTELLEN) -->
+<!-- true = Anzeigen | false = Ausblenden -->
+{% set show_badges = true %}
+<!-- ========================================= -->
 
-        /* === PREMIUM MODERN ABOUT PAGE STYLES === */
-        .about-modern-wrapper {
-            padding-bottom: 100px;
-            position: relative;
-        }
-        
-        .about-hero {
-            text-align: center;
-            padding: 100px 20px 60px;
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 40px;
-        }
-        
-        .about-hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(var(--accent-rgb), 0.15) 0%, transparent 70%);
-            filter: blur(60px);
-            z-index: -1;
-            pointer-events: none;
-            /* Performance: GPU Layer */
-            will-change: transform;
-        }
-
-        .about-title {
-            font-size: 3.5rem;
-            font-weight: 900;
-            margin-bottom: 25px;
-            line-height: 1.1;
-            letter-spacing: -1px;
-        }
-        
-        .about-subtitle {
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            max-width: 700px;
-            margin: 0 auto;
-            line-height: 1.7;
-            font-weight: 300;
-        }
-
-        .about-text-area {
-            max-width: 800px;
-            margin: 0 auto 80px;
-            text-align: center;
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            line-height: 1.8;
-        }
-        .about-text-area p {
-            margin-bottom: 20px;
-        }
-
-        .about-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-            margin-bottom: 100px;
-        }
-        
-        .about-card {
-            background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.05);
-            padding: 40px;
-            border-radius: 20px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-            text-align: left;
-            /* Performance: Hint for browser */
-            will-change: transform, box-shadow;
-        }
-        
-        .about-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(var(--accent-rgb), 0.3);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2), inset 0 0 0 1px rgba(var(--accent-rgb), 0.1);
-        }
-
-        .about-icon-wrapper {
-            width: 60px;
-            height: 60px;
-            background: rgba(var(--accent-rgb), 0.1);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 25px;
-            color: var(--accent-primary);
-            font-size: 1.5rem;
-            transition: 0.3s;
-        }
-        
-        .about-card:hover .about-icon-wrapper {
-            background: var(--accent-primary);
-            color: #fff;
-            transform: scale(1.1) rotate(-5deg);
-            box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.4);
-        }
-
-        .about-card h3 {
-            font-size: 1.4rem;
-            margin-bottom: 15px;
-            color: #fff;
-            font-weight: 700;
-        }
-        
-        .about-card p {
-            color: var(--text-muted);
-            line-height: 1.6;
-            font-size: 0.95rem;
-            margin: 0;
-        }
-
-        .about-stats-ribbon {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 40px;
-            margin-bottom: 100px;
-            padding: 50px 0;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.01) 50%, transparent 100%);
-        }
-        
-        .a-stat-item {
-            text-align: center;
-            position: relative;
-        }
-        
-        .a-stat-num {
-            font-size: 3.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #fff 30%, var(--accent-primary) 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: block;
-            margin-bottom: 5px;
-            line-height: 1;
-            font-variant-numeric: tabular-nums; 
-        }
-        
-        .a-stat-label {
-            color: var(--text-muted);
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-            font-weight: 600;
-            opacity: 0.7;
-        }
-
-        @media (max-width: 768px) {
-            .about-title { font-size: 2.5rem; }
-            .about-hero { padding: 60px 20px; }
-            .about-grid { grid-template-columns: 1fr; }
-            .a-stat-num { font-size: 2.5rem; }
-            .about-stats-ribbon { gap: 40px; flex-direction: column; }
-        }
-
-        /* === MOBILE MENU FIXES (ADDED) === */
-        /* Burger Toggle Styles */
-        .mobile-toggle {
-            display: none; /* Desktop hidden */
-            background: none;
-            border: none;
-            color: var(--text-main);
-            font-size: 1.6rem;
-            cursor: pointer;
-            padding: 10px;
-            z-index: 1010;
-        }
-        
-        @media (max-width: 900px) {
-            /* Show toggle on mobile */
-            .mobile-toggle {
-                display: block;
-                order: 3; /* Ensure it stays right */
-            }
+<!-- TECH DASHBOARD HEADER -->
+<section class="store-header-dashboard">
+    <div class="container">
+        <div class="dashboard-layout">
             
-            /* Navbar adjustments */
-            .navbar {
-                justify-content: space-between;
-            }
-            
-            /* Ensure nav is relative for dropdown positioning */
-            .navbar > nav {
-                position: static !important;
-                margin: 0 !important;
-                width: 100%;
-                order: 4; /* Move navigation below header items */
-            }
-
-            /* The Mobile Menu List */
-            .nav-links.mobile-open {
-                display: flex !important; /* Force flex display when open */
-                flex-direction: column;
-                position: absolute;
-                top: 100%; /* Below header */
-                left: 0;
-                width: 100%;
-                background: rgba(5, 5, 7, 0.95);
-                backdrop-filter: blur(15px);
-                -webkit-backdrop-filter: blur(15px);
-                padding: 10px 0;
-                border-bottom: 1px solid rgba(255,255,255,0.1);
-                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-                z-index: 999;
-                max-height: 80vh;
-                overflow-y: auto;
-                animation: slideDownMenu 0.3s ease-out forwards;
-            }
-
-            @keyframes slideDownMenu {
-                from { opacity: 0; transform: translateY(-10px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-
-            .nav-links.mobile-open > li {
-                width: 100%;
-                text-align: center;
-                opacity: 0; /* For animation */
-                animation: fadeInItem 0.4s ease forwards;
-            }
-            
-            .nav-links.mobile-open > li:nth-child(1) { animation-delay: 0.05s; }
-            .nav-links.mobile-open > li:nth-child(2) { animation-delay: 0.1s; }
-            .nav-links.mobile-open > li:nth-child(3) { animation-delay: 0.15s; }
-            .nav-links.mobile-open > li:nth-child(4) { animation-delay: 0.2s; }
-            .nav-links.mobile-open > li:nth-child(5) { animation-delay: 0.25s; }
-            .nav-links.mobile-open > li:nth-child(6) { animation-delay: 0.3s; }
-
-            @keyframes fadeInItem { to { opacity: 1; } }
-
-            .nav-links.mobile-open a {
-                padding: 15px 20px;
-                display: block;
-                border-bottom: 1px solid rgba(255,255,255,0.03);
-            }
-            
-            /* Mobile Dropdowns */
-            .nav-links.mobile-open .dropdown-menu {
-                position: static;
-                width: 100%;
-                background: rgba(255,255,255,0.03);
-                border: none;
-                box-shadow: none;
-                padding: 0;
-                display: none; /* JS toggles this */
-                text-align: center; /* WICHTIG: Container zentrieren */
-            }
-            
-            .nav-links.mobile-open .dropdown-menu li a {
-                padding: 10px 0; /* WICHTIG: Nur vertikales Padding */
-                padding-left: 0; /* WICHTIG: Linkes Padding entfernen */
-                text-align: center; /* WICHTIG: Text zentrieren */
-                color: var(--text-muted);
-                font-size: 0.85rem;
-                display: block;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- SEASONAL EFFECTS CONTAINER -->
-    <div id="seasonal-effects-layer"></div>
-    
-    <!-- (ALTE FLASH-LIGHT DIV ENTFERNT FÜR STARDUST TRAIL) -->
-
-    <!-- Header -->
-    <header>
-        <div class="container navbar">
-            <!-- Logo -->
-            <a href="/" class="logo animate-in">
-                {% if store.logo %}
-                    <img src="{{ store.logo }}" alt="{{ store.name }}" style="max-height: 40px; width: auto;" loading="eager" decoding="async">
-                {% else %}
-                    <i class="fas fa-cube"></i> {{ store.name }}
-                {% endif %}
-            </a>
-            
-            <!-- Main Navigation -->
-            <nav>
-                <!-- NOTE: 'mobile-open' class is toggled by JS on mobile -->
-                <ul class="nav-links animate-in delay-1" id="main-nav">
-                    <li class="{% if page.category == 'index' %}active{% endif %}">
-                        <a href="/">{{ __("Home") }}</a>
-                    </li>
-                    
-                    {% for category in store.categories %}
-                        {% if category.subcategories|length > 0 %}
-                            <li class="dropdown {% if category.active %}active{% endif %}">
-                                <a href="#" class="dropdown-toggle">
-                                    {{ category.name }} <i class="fas fa-chevron-down" style="font-size: 0.7em; margin-left: 4px;"></i>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    {% for subcategory in category.subcategories %}
-                                        <li><a href="/category/{{ subcategory.id }}">{{ subcategory.name }}</a></li>
-                                    {% endfor %}
-                                </ul>
-                            </li>
-                        {% else %}
-                            <li class="{% if category.active %}active{% endif %}">
-                                <a href="/category/{{ category.id }}">{{ category.name }}</a>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-
-                    {% for p in store.pages %}
-                        <li class="{% if p.active %}active{% endif %}">
-                            <a href="/{{ p.slug }}">{{ p.title }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </nav>
-            
-            <!-- User & Cart Actions -->
-            <div class="nav-actions animate-in delay-2" style="display: flex; align-items: center; gap: 15px;">
-                
-                <!-- Currency / Language -->
-                <div class="dropdown">
-                    <a href="#" class="btn btn-secondary btn-sm" style="padding: 8px 15px;">
-                        <i class="fas fa-globe"></i>
-                    </a>
-                    <ul class="dropdown-menu" style="min-width: 150px; left: auto; right: 0;">
-                         {% for locale, name in store.locales %}
-                            <li><a href="?locale={{ locale }}">{{ name }}</a></li>
-                         {% endfor %}
-                         {% if store.currencies|length > 1 %}
-                             <li style="border-top: 1px solid rgba(255,255,255,0.1); margin-top:5px;"></li>
-                             {% for currency in store.currencies %}
-                                <li><a href="?currency={{ currency.code }}">{{ currency.code }} ({{ currency.symbol }})</a></li>
-                             {% endfor %}
-                         {% endif %}
-                    </ul>
+            <!-- LEFT: Info & Title -->
+            <div class="dashboard-info animate-in">
+                <!-- Breadcrumbs -->
+                <div class="dashboard-breadcrumbs">
+                    <a href="/">Home</a> 
+                    {% if category.name %}
+                        / <span>{{ category.name }}</span>
+                    {% endif %}
                 </div>
 
-                <!-- Login / User -->
-                {% if basket.username %}
-                    <div class="dropdown">
-                         <a href="#" class="btn btn-secondary btn-sm">
-                            <i class="fas fa-user-circle" style="margin-right: 5px;"></i> 
-                            <span style="font-weight: 600;">
-                                {% if basket.ign %}
-                                    {{ basket.ign }}
-                                {% else %}
-                                    {{ __("Account") }}
-                                {% endif %}
-                            </span>
-                        </a>
-                        <ul class="dropdown-menu" style="min-width: 180px; left: auto; right: 0;">
-                            <li style="padding: 10px 20px; color: var(--text-muted); font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
-                                <div style="font-weight:bold; color:#fff;">{{ __("Logged in as") }}</div>
-                                <div style="opacity: 0.7;">{{ basket.username }}</div>
-                            </li>
-                            <li>
-                                <a href="/checkout/logout" style="color: #ef4444; display: flex; align-items: center; gap: 8px;">
-                                    <i class="fas fa-sign-out-alt"></i> {{ __("Logout") }}
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                {% else %}
-                    <a href="/login" class="btn btn-secondary btn-sm">
-                        <i class="fas fa-sign-in-alt"></i> {{ __("Login") }}
-                    </a>
-                {% endif %}
+                <!-- Title -->
+                <h1 class="dashboard-title">
+                    {% if category.name %}
+                        {{ category.name }}
+                    {% else %}
+                        Store Catalog
+                    {% endif %}
+                </h1>
 
-                <!-- Cart Button -->
-                <div class="dropdown" id="cart-dropdown-container">
-                    <a href="{{ basket.packages|length > 0 ? '/checkout/basket' : '#' }}" class="btn btn-primary">
-                        <i class="fas fa-shopping-bag"></i>
-                        <span>
-                            {% if basket.price > 0 %}
-                                {{ basket.price|money }} {{ basket.currency }}
-                            {% else %}
-                                {{ __("Basket") }}
-                            {% endif %}
-                        </span>
-                        {% if basket.packages|length > 0 %}
-                            <span class="badge badge-cart">{{ basket.packages|length }}</span>
-                        {% endif %}
-                    </a>
-                    
-                    <div class="dropdown-menu basket-dropdown">
-                        {% if basket.packages|length > 0 %}
-                            <div style="max-height: 300px; overflow-y: auto;">
-                                {% for package in basket.packages %}
-                                    <div class="basket-item">
-                                        <div class="basket-item-info">
-                                            <span class="basket-item-name">{{ package.name }}</span>
-                                            <span class="basket-item-price">{{ package.price|money }} {{ basket.currency }}</span>
-                                        </div>
-                                        <div class="basket-actions">
-                                            <a href="/checkout/packages/remove/{{ package.id }}"><i class="fas fa-trash"></i></a>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                            <div class="basket-footer">
-                                <div class="basket-total">
-                                    <span>{{ __("Total") }}</span>
-                                    <span>{{ basket.price|money }} {{ basket.currency }}</span>
-                                </div>
-                                <a href="/checkout/basket" class="btn btn-success btn-block">{{ __("Checkout") }}</a>
-                            </div>
-                        {% else %}
-                            <div style="text-align: center; padding: 30px 20px;">
-                                <i class="fas fa-shopping-basket" style="font-size: 2.5rem; color: rgba(255,255,255,0.1); margin-bottom: 15px;"></i>
-                                <p style="color: var(--text-muted); font-size: 0.9rem; margin: 0;">{{ __("Your basket is empty.") }}</p>
-                            </div>
-                        {% endif %}
-                    </div>
+                <!-- Description -->
+                {% if category.description %}
+                    <p class="dashboard-desc">
+                        {{ category.description|raw }}
+                    </p>
+                {% else %}
+                    <p class="dashboard-desc">
+                        Browse our collection of high-quality resources optimized for performance.
+                    </p>
+                {% endif %}
+            </div>
+
+            <!-- RIGHT: Search & Action -->
+            <div class="dashboard-actions animate-in delay-1">
+                <div class="search-dashboard">
+                    <input type="text" id="searchInput" class="search-input-dashboard" placeholder="{{ __("Search packages...") }}" autocomplete="off">
+                    <i class="fas fa-search search-icon-dashboard"></i>
                 </div>
             </div>
 
-            <!-- NEU: Mobile Burger Menu Button -->
-            <button class="mobile-toggle" id="mobile-menu-btn" aria-label="Toggle Navigation">
-                <i class="fas fa-bars"></i>
-            </button>
-
         </div>
-    </header>
+    </div>
+</section>
 
-    <!-- Notifications -->
-    <div class="container" style="margin-top: 30px;">
-        {% if page.message.display %}
-            <div class="alert alert-{{ page.message.type }} animate-in">
-                {{ page.message.text }}
+<!-- Main Store Content -->
+<div class="container store-container" style="padding-bottom: 80px;">
+    
+    <main class="animate-in delay-2">
+
+        <!-- 1. Subcategories Section -->
+        {% if subcategories|length > 0 %}
+            <div style="margin-bottom: 50px; margin-top: 40px;">
+                <div class="section-title" style="text-align: left; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;">
+                    <h2 style="font-size: 1.3rem; margin: 0; color: #fff; font-weight: 700;">{{ __("Categories") }}</h2>
+                </div>
+                
+                <div class="products-grid">
+                    {% for subcat in subcategories %}
+                    <a href="/category/{{ subcat.id }}" class="product-card" style="text-decoration: none;">
+                        <div class="category-card-inner">
+                             <i class="fas fa-folder" style="opacity: 0.8;"></i>
+                             <div class="product-title" style="margin-top: 15px; margin-bottom: 0; font-size: 1rem; font-weight: 600;">
+                                {{ subcat.name }}
+                             </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
             </div>
         {% endif %}
-    </div>
-
-    <!-- === CUSTOM ABOUT PAGE WRAPPER === -->
-    {% if page.slug == 'about' or page.slug == 'about-us' %}
         
-        <style>
-            .sidebar, .modules, #sidebar, .tebex-sidebar, aside { display: none !important; }
-            .module-header, .panel-heading { display: none !important; }
-            .col-md-3, .col-lg-3, .col-md-4, .col-lg-4 { display: none !important; } 
-            .col-md-9, .col-lg-9, .col-md-8, .col-lg-8 { 
-                width: 100% !important; 
-                flex: 0 0 100% !important; 
-                max-width: 100% !important; 
-            }
-        </style>
+        <!-- 2. Packages Section -->
+        {% set display_packages = category.packages %}
+        {% if display_packages is not defined or display_packages|length == 0 %}
+             {% set display_packages = packages %}
+        {% endif %}
 
-        <div class="about-modern-wrapper animate-in">
-            <section class="about-hero">
-                <div class="container">
-                    <h1 class="about-title">We are <span class="text-gradient">{{ store.name }}</span></h1>
-                </div>
-            </section>
-
-    {% endif %}
-
-    <!-- === STANDARD CONTENT SLOT === -->
-    <div id="standard-content-slot" class="{% if page.slug == 'about' or page.slug == 'about-us' %}about-text-area container{% endif %}">
-        {% block content %}{% endblock %}
-    </div>
-
-    <!-- === CUSTOM ABOUT PAGE BOTTOM PART === -->
-    {% if page.slug == 'about' or page.slug == 'about-us' %}
-
-            <div class="container">
-                <div class="about-grid">
-                    <div class="about-card">
-                        <div class="about-icon-wrapper"><i class="fas fa-code"></i></div>
-                        <h3>Clean Code</h3>
-                        <p>We prioritize performance above all. Our resources are optimized to run at 0.00ms resmon on idle, ensuring your server stays lag-free even under heavy load.</p>
-                    </div>
-                    <div class="about-card">
-                        <div class="about-icon-wrapper"><i class="fas fa-shield-alt"></i></div>
-                        <h3>Enterprise Security</h3>
-                        <p>All scripts use the official FiveM Escrow system. We ensure your server remains protected against exploits and unauthorized access at all times.</p>
-                    </div>
-                    <div class="about-card">
-                        <div class="about-icon-wrapper"><i class="fas fa-headset"></i></div>
-                        <h3>Fast Support</h3>
-                        <p>Our dedicated support team is available to help you. We don't just sell scripts; we provide a full service experience to help you succeed.</p>
-                    </div>
-                </div>
-
-                <div class="about-stats-ribbon" id="about-stats-trigger">
-                    <div class="a-stat-item">
-                        <span class="a-stat-num counter-anim" data-target="3" data-suffix="">0</span>
-                        <span class="a-stat-label">Premium Scripts</span>
-                    </div>
-                    <div class="a-stat-item">
-                        <span class="a-stat-num counter-anim" data-target="550" data-suffix="+">0</span>
-                        <span class="a-stat-label">Happy Clients</span>
-                    </div>
-                    <div class="a-stat-item">
-                        <span class="a-stat-num counter-anim" data-target="100" data-suffix="%">0</span>
-                        <span class="a-stat-label">Secure</span>
-                    </div>
+        {% if display_packages|length > 0 %}
+            <div id="packages-section" style="margin-bottom: 25px; margin-top: 40px;">
+                 <div class="section-title" style="text-align: left; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;">
+                    <h2 style="font-size: 1.3rem; margin: 0; color: #fff; font-weight: 700;">{{ __("Available Packages") }}</h2>
                 </div>
             </div>
-        </div> 
-
-    {% endif %}
-
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <h2 style="margin-bottom: 20px;">{{ store.name }}</h2>
-            <p style="color: var(--text-muted); max-width: 400px; margin: 0 auto 30px;">
-                {{ store.description }}
-            </p>
-            <div style="font-size: 1.5rem; margin-bottom: 30px;">
-                <a href="https://discord.gg/ely" target="_blank" style="margin: 0 15px; color: #5865F2;">
-                    <i class="fab fa-discord"></i>
-                </a>
-                <a href="https://discord.gg/ely" target="_blank" style="margin: 0 15px; color: #FF0000;">
-                    <i class="fab fa-youtube"></i>
-                </a>
-                <a href="https://discord.gg/ely" target="_blank" style="margin: 0 15px; color: #1DA1F2;">
-                    <i class="fab fa-twitter"></i>
-                </a>
-            </div>
-
-            <div class="tebex-legal-wrapper">
-                <div class="legal-links-list">
-                    <a href="/terms/checkout">{{ __("Terms & Conditions") }}</a>
-                    <a href="/terms/privacy">{{ __("Privacy Policy") }}</a>
-                    <a href="/terms/impressum">{{ __("Impressum") }}</a>
-                </div>
-                <p class="legal-disclaimer">
-                    {{ __("This store is not affiliated with or endorsed by Mojang Studios, Microsoft or other rightsholders. All trademarks are the property of their respective owners.") }}
-                </p>
-            </div>
-
-            <p style="font-size: 0.9rem; color: #555;">
-                &copy; {{ "now"|date("Y") }} {{ store.name }}. All rights reserved. Powered by <a href="https://www.tebex.io" target="_blank" style="color: inherit;">Tebex</a>.
-            </p>
-        </div>
-    </footer>
-
-    <!-- Tebex Required Modal -->
-    <div class="modal" id="popup-modal" tabindex="-1" role="dialog"></div>
-
-    <!-- === LUCKY WHEEL WIDGET === -->
-    {% if basket.username %}
-    
-    <button id="lucky-trigger-btn" class="lucky-trigger-btn">
-        <i class="fas fa-gift"></i>
-    </button>
-
-    <div id="daily-spin-widget" class="lucky-widget-container" style="display: none;">
-        <div class="lucky-widget-card">
-            <button class="lucky-close-btn" id="close-lucky-wheel"><i class="fas fa-times"></i></button>
-            <div class="lucky-header">
-                <h3 style="font-size: 1.4rem;"><i class="fas fa-gem" style="color: var(--accent-primary);"></i> Lucky Spin</h3>
-            </div>
-            <div class="wheel-outer-ring">
-                <div class="wheel-pointer-modern"></div>
-                <div class="wheel-wrapper">
-                    <div class="wheel-spinner" id="lucky-spinner">
-                        <div class="wheel-segment" style="--i:1;"><span>5%</span></div>
-                        <div class="wheel-segment" style="--i:2;"><span>10%</span></div>
-                        <div class="wheel-segment" style="--i:3;">
-                            <span><i class="fas fa-times" style="color: rgba(255,255,255,0.7); font-size: 1.5rem;"></i></span>
-                        </div>
-                        <div class="wheel-segment" style="--i:4;"><span>20%</span></div>
-                        <div class="wheel-segment" style="--i:5;"><span>5%</span></div>
-                        <div class="wheel-segment" style="--i:6;">
-                            <span><i class="fas fa-times" style="color: rgba(255,255,255,0.7); font-size: 1.5rem;"></i></span>
-                        </div>
-                    </div>
-                    <div class="wheel-hub"><i class="fas fa-bolt"></i></div>
-                </div>
-            </div>
-            <div class="lucky-footer">
-                <button id="btn-spin-wheel" class="btn btn-primary btn-block btn-spin-glow">SPIN NOW</button>
-                <div id="lucky-countdown-container" style="display:none; text-align:center; margin-bottom:10px;">
-                    <div style="font-size:0.8rem; color:#a1a1aa; text-transform:uppercase; letter-spacing:1px; margin-bottom:5px;">Next Spin In</div>
-                    <div id="lucky-timer" style="font-size:1.5rem; font-weight:800; color:#fff; font-variant-numeric:tabular-nums; text-shadow: 0 0 20px rgba(var(--accent-rgb), 0.5);">--:--:--</div>
-                </div>
-                <div id="lucky-win-display" style="display:none;">
-                    <div class="win-animation-wrapper">
-                        <div class="win-label" id="win-title-text">CONGRATULATIONS!</div>
-                        <div class="coupon-modern-display" id="win-coupon-container">
-                            <span id="lucky-coupon-code">...</span>
-                            <button class="btn-copy-modern" onclick="copyLuckyCode()"><i class="fas fa-copy"></i></button>
-                        </div>
-                        <p class="win-subtitle" id="win-subtitle-text">Discount applied at checkout</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-    <style>
-        .lucky-trigger-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background: var(--accent-gradient);
-            border-radius: 50%;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            z-index: 9980;
-            box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.4);
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: pulse-trigger 3s infinite;
-        }
-        .lucky-trigger-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.6);
-        }
-        .lucky-trigger-btn:active {
-            transform: scale(0.95);
-        }
-        @keyframes pulse-trigger {
-            0% { box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(var(--accent-rgb), 0); }
-            100% { box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0); }
-        }
-        .lucky-widget-card.closing {
-            animation: closeSmooth 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-            pointer-events: none;
-        }
-        @keyframes closeSmooth {
-            0% { opacity: 1; transform: translateX(0) scale(1); }
-            100% { opacity: 0; transform: translateX(20px) scale(0.95); }
-        }
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(50px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-    </style>
-
-    <!-- Scripts -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="{{ asset('scripts.js') }}" defer></script>
-
-    <!-- === LUCKY WHEEL LOGIC === -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const SEGMENTS = [
-                { id: 1, label: "5%",  type: 'win',  code: "CODE-1",   weight: 30 }, 
-                { id: 2, label: "10%", type: 'win',  code: "CODE-2",  weight: 15 }, 
-                { id: 3, label: "Loss", type: 'loss', code: null,           weight: 25 }, 
-                { id: 4, label: "20%", type: 'win',  code: "CODE-3",      weight: 5  }, 
-                { id: 5, label: "5%",  type: 'win',  code: "CODE-4",   weight: 10 }, 
-                { id: 6, label: "Loss", type: 'loss', code: null,           weight: 15 } 
-            ];
-
-            const widget = document.getElementById('daily-spin-widget');
-            const triggerBtn = document.getElementById('lucky-trigger-btn');
-
-            if (typeof themeConfig !== 'undefined' && themeConfig.enableLuckyWheel === false) {
-                if(widget) widget.remove(); 
-                if(triggerBtn) triggerBtn.remove();
-                return;
-            }
-
-            const closeBtn = document.getElementById('close-lucky-wheel');
-            const spinBtn = document.getElementById('btn-spin-wheel');
-            const spinner = document.getElementById('lucky-spinner');
-            const winDisplay = document.getElementById('lucky-win-display');
-            const couponCodeEl = document.getElementById('lucky-coupon-code');
-            const couponContainer = document.getElementById('win-coupon-container');
-            const titleText = document.getElementById('win-title-text');
-            const subtitleText = document.getElementById('win-subtitle-text');
-            const countdownContainer = document.getElementById('lucky-countdown-container');
-            const timerEl = document.getElementById('lucky-timer');
             
-            const STORAGE_KEY = 'dux_last_spin_time'; 
-            let intervalHours = 24;
-            if (typeof themeConfig !== 'undefined' && themeConfig.spinIntervalHours) {
-                intervalHours = themeConfig.spinIntervalHours;
-            }
-            const COOLDOWN = intervalHours * 60 * 60 * 1000; 
-            let countdownInterval = null;
-
-            function updateWheelState() {
-                const lastSpin = localStorage.getItem(STORAGE_KEY);
-                if(!lastSpin) {
-                    spinBtn.style.display = 'flex'; 
-                    countdownContainer.style.display = 'none'; 
-                    return true; 
-                }
-                const diff = Date.now() - parseInt(lastSpin);
-                const remaining = COOLDOWN - diff;
-
-                if(remaining > 0) {
-                    spinBtn.style.display = 'none'; 
-                    countdownContainer.style.display = 'block'; 
-                    updateTimerDisplay(remaining);
-                    if(countdownInterval) clearInterval(countdownInterval);
-                    countdownInterval = setInterval(() => {
-                        const newDiff = Date.now() - parseInt(localStorage.getItem(STORAGE_KEY));
-                        const newRem = COOLDOWN - newDiff;
-                        if(newRem <= 0) {
-                            clearInterval(countdownInterval);
-                            updateWheelState(); 
-                        } else {
-                            updateTimerDisplay(newRem);
-                        }
-                    }, 1000);
-                    return false; 
-                } else {
-                    spinBtn.style.display = 'flex';
-                    countdownContainer.style.display = 'none';
-                    if(countdownInterval) clearInterval(countdownInterval);
-                    return true; 
-                }
-            }
-
-            function updateTimerDisplay(ms) {
-                const totalSeconds = Math.floor(ms / 1000);
-                const h = Math.floor(totalSeconds / 3600);
-                const m = Math.floor((totalSeconds % 3600) / 60);
-                const s = Math.floor(totalSeconds % 60);
-                timerEl.textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
-            }
-
-            function pad(n) { return n < 10 ? '0' + n : n; }
-
-            if(widget) {
-                const isReady = updateWheelState();
-                if(isReady) {
-                    setTimeout(() => { widget.style.display = 'flex'; }, 1500); 
-                }
-            }
-
-            if(triggerBtn) {
-                triggerBtn.addEventListener('click', () => {
-                    updateWheelState(); 
-                    widget.style.display = 'flex'; 
-                    const card = widget.querySelector('.lucky-widget-card');
-                    card.classList.remove('closing');
-                    void card.offsetWidth;
-                    card.style.animation = "slideInRight 0.5s cubic-bezier(0.19, 1, 0.22, 1)";
-                });
-            }
-
-            if(closeBtn) {
-                closeBtn.addEventListener('click', () => {
-                    const card = widget.querySelector('.lucky-widget-card');
-                    card.style.animation = '';
-                    void card.offsetWidth; 
-                    card.classList.add('closing');
-                    setTimeout(() => {
-                        widget.style.display = 'none';
-                        card.classList.remove('closing'); 
-                    }, 500);
-                });
-            }
-
-            if(spinBtn) {
-                spinBtn.addEventListener('click', () => {
-                    if(spinBtn.disabled) return;
-                    
-                    let totalWeight = SEGMENTS.reduce((sum, seg) => sum + seg.weight, 0);
-                    let random = Math.random() * totalWeight;
-                    let winner = SEGMENTS[0];
-                    for (let segment of SEGMENTS) {
-                        if (random < segment.weight) {
-                            winner = segment;
-                            break;
-                        }
-                        random -= segment.weight;
-                    }
-
-                    const segmentCenterAngle = (winner.id - 1) * 60 + 30; 
-                    const targetRotation = 360 - segmentCenterAngle;
-                    const totalDeg = (5 * 360) + targetRotation;
-
-                    spinBtn.disabled = true;
-                    spinBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ...';
-                    
-                    spinner.style.transition = 'transform 5s cubic-bezier(0.15, 0.85, 0.35, 1.05)';
-                    spinner.style.transform = `rotate(${totalDeg}deg)`;
-
-                    setTimeout(() => {
-                        if (winner.type === 'win') {
-                            titleText.innerText = "CONGRATULATIONS!";
-                            titleText.style.color = "#10b981"; 
-                            couponContainer.style.display = "flex";
-                            couponCodeEl.innerText = winner.code;
-                            subtitleText.innerText = "Discount applied at checkout";
-                        } else {
-                            titleText.innerText = "OH NO!";
-                            titleText.style.color = "#ef4444"; 
-                            couponContainer.style.display = "none"; 
-                            subtitleText.innerText = "Better luck next time!";
-                        }
-
-                        winDisplay.style.display = 'block';
-                        spinBtn.style.display = 'none';
-                        
-                        const card = document.querySelector('.lucky-widget-card');
-                        card.classList.add('win-pulse');
-
-                        localStorage.setItem(STORAGE_KEY, Date.now());
-                        updateWheelState();
-
-                    }, 5000);
-                });
-            }
-
-            window.copyLuckyCode = function() {
-                const code = couponCodeEl.innerText;
-                navigator.clipboard.writeText(code).then(() => {
-                    const btn = document.querySelector('.btn-copy-modern');
-                    btn.innerHTML = '<i class="fas fa-check"></i>';
-                    btn.style.background = '#10b981';
-                    setTimeout(() => { 
-                        btn.innerHTML = '<i class="fas fa-copy"></i>';
-                        btn.style.background = '';
-                    }, 2000);
-                });
-            };
-        });
-    </script>
-
-    <script>
-        // ==========================================
-        // [!] THEME CONFIGURATION
-        // Edit settings below to enable/disable effects
-        // ==========================================
-        
-        const themeConfig = {
-            // NEU: Glücksrad Ein/Ausschalten
-            enableLuckyWheel: true, // Setze auf 'false', um es komplett zu deaktivieren!
-            
-            // NEU: Glücksrad Intervall (in Stunden)
-            // Bestimmt, wie lange man warten muss, bis das Rad wieder erscheint.
-            spinIntervalHours: 72, // Beispiele: 24, 48, 72 ...
-
-            // 1. Mouse Glow / Stardust Trail
-            // Set to true to enable the new Stardust Trail effect
-            enableMouseGlow: false, 
-
-            // 2. Headline Effect: Animation for the main titles
-            // Options: 'gradient' (Flowing colors), 'glitch' (Cyberpunk style), or 'none'
-            headlineEffect: 'gradient', 
-            
-            // 3. Seasonal Effects (Snow / Halloween)
-            seasonal: {
-                theme: 'christmas',      // Options: 'christmas', 'halloween', or 'none'
-                count: 15           // Number of snowflakes/bats (Lower number = better performance)
-            },
-
-            // 4. Hero Particle Network: Interactive 3D web background
-            // Set to true to enable, false to disable
-            enableCanvasParticles: true,
-
-            // NEU: Hintergrund-Stil Auswahl
-            // Wähle hier deinen Style: 
-            // 'network'   (Connected Lines - Standard)
-            // 'matrix'    (Digital Rain)
-            // 'snow'      (Sanfter Schneefall)
-            // 'fireflies' (Glühende Orbs)
-            // 'warp'      (Star Hyperspace - REPARIERT)
-            // 'bubbles'   (Aufsteigende Blasen)
-            // 'retro'     (80s Synthwave Grid)
-            // 'waves'     (Sanfte Sinus-Wellen - OVERLAY)
-            // 'bokeh'     (Weiche Lichtpunkte - OVERLAY)
-            // 'rain'      (Ästhetischer Regen - OVERLAY)
-            heroBackgroundStyle: 'waves' 
-        };
-
-        // 1. TOUCH DROPDOWN & MOBILE TOGGLE
-        document.addEventListener('DOMContentLoaded', function() {
-            // Dropdowns
-            const dropdowns = document.querySelectorAll('.dropdown-toggle');
-            dropdowns.forEach(drop => {
-                drop.addEventListener('click', function(e) {
-                    if(window.innerWidth < 992) { 
-                        e.preventDefault();
-                        const menu = this.nextElementSibling;
-                        // Class toggling is cleaner
-                        if(menu.style.display === 'block') {
-                            menu.style.display = 'none';
-                            this.parentElement.classList.remove('active');
-                        } else {
-                            menu.style.display = 'block';
-                            this.parentElement.classList.add('active');
-                        }
-                    }
-                });
-            });
-
-            // NEW: Burger Menu Logic
-            const burgerBtn = document.getElementById('mobile-menu-btn');
-            const navLinks = document.getElementById('main-nav');
-            const icon = burgerBtn ? burgerBtn.querySelector('i') : null;
-
-            if (burgerBtn && navLinks) {
-                burgerBtn.addEventListener('click', function() {
-                    navLinks.classList.toggle('mobile-open');
-                    
-                    // Toggle Icon
-                    if (navLinks.classList.contains('mobile-open')) {
-                        if(icon) {
-                            icon.classList.remove('fa-bars');
-                            icon.classList.add('fa-times');
-                        }
-                    } else {
-                        if(icon) {
-                            icon.classList.remove('fa-times');
-                            icon.classList.add('fa-bars');
-                        }
-                    }
-                });
-            }
-        });
-
-        // 2. SEASONAL EFFECTS
-        document.addEventListener('DOMContentLoaded', function() {
-            const layer = document.getElementById('seasonal-effects-layer');
-            const config = themeConfig.seasonal;
-            if (!layer || config.theme === 'none') return;
-
-            if (config.theme === 'christmas') {
-                layer.className = 'snow-container';
-                for (let i = 0; i < config.count; i++) {
-                    const flake = document.createElement('div');
-                    flake.className = 'snowflake';
-                    layer.appendChild(flake);
-                }
-            } else if (config.theme === 'halloween') {
-                layer.className = 'halloween-container';
-                for (let i = 0; i < config.count; i++) {
-                    const bat = document.createElement('div');
-                    bat.className = 'bat';
-                    bat.textContent = '🦇'; 
-                    layer.appendChild(bat);
-                }
-            }
-        });
-
-        // 3. STARDUST CURSOR TRAIL (Replaces Flashlight)
-        document.addEventListener('DOMContentLoaded', function() {
-            if (!themeConfig.enableMouseGlow) return;
-
-            // Try to get accent color from CSS variables, fallback to purple
-            let particleColor = '#8b5cf6';
-            const styleColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-primary');
-            if(styleColor && styleColor.trim() !== '') {
-                particleColor = styleColor.trim();
-            }
-
-            let lastX = 0;
-            let lastY = 0;
-
-            document.addEventListener('mousemove', function(e) {
-                // Optimization: Only spawn particle if mouse moved enough distance
-                // Prevents particle piling when mouse is still
-                const dist = Math.hypot(e.clientX - lastX, e.clientY - lastY);
-                if (dist < 10) return; // Threshold pixels
-
-                lastX = e.clientX;
-                lastY = e.clientY;
-
-                createParticle(e.clientX, e.clientY);
-            });
-
-            function createParticle(x, y) {
-                const particle = document.createElement('div');
-                particle.classList.add('cursor-particle');
-                document.body.appendChild(particle);
-
-                // Random size variation
-                const size = Math.random() * 3 + 2; // 2px to 5px
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-
-                // Set Color
-                particle.style.background = particleColor;
-                particle.style.boxShadow = `0 0 ${size * 2}px ${particleColor}`;
-
-                // Set Position
-                particle.style.left = `${x}px`;
-                particle.style.top = `${y}px`;
-
-                // Random Movement direction (drift)
-                const destX = x + (Math.random() - 0.5) * 50;
-                const destY = y + (Math.random() - 0.5) * 50;
-
-                // Animate using Web Animations API
-                const animation = particle.animate([
-                    {
-                        transform: `translate(-50%, -50%) scale(1)`,
-                        opacity: 1
-                    },
-                    {
-                        transform: `translate(-50%, -50%) translate(${destX - x}px, ${destY - y}px) scale(0)`,
-                        opacity: 0
-                    }
-                ], {
-                    duration: 800, // ms
-                    easing: 'cubic-bezier(0, .9, .57, 1)', // Ease out
-                    fill: 'forwards'
-                });
-
-                // Remove from DOM after animation
-                animation.onfinish = () => {
-                    particle.remove();
-                };
-            }
-        });
-
-        // 4. HEADLINE ANIMATION
-        document.addEventListener('DOMContentLoaded', function() {
-            const effectType = themeConfig.headlineEffect;
-            if (!effectType || effectType === 'none') return;
-            let targets = [];
-            if (effectType === 'gradient') {
-                const gradEl = document.querySelector('.hero-landing h1 .text-gradient');
-                if (gradEl) targets.push(gradEl);
-                const storeHeaders = document.querySelectorAll('.store-header h1');
-                storeHeaders.forEach(el => targets.push(el));
-            } else if (effectType === 'glitch') {
-                const heroH1 = document.querySelector('.hero-landing h1');
-                if (heroH1) targets.push(heroH1);
-                const storeHeaders = document.querySelectorAll('.store-header h1');
-                storeHeaders.forEach(el => targets.push(el));
-            }
-            targets.forEach(el => {
-                if (effectType === 'gradient') {
-                    el.classList.add('headline-effect-gradient');
-                } else if (effectType === 'glitch') {
-                    el.classList.add('headline-effect-glitch');
-                }
-            });
-        });
-        
-        // 5. ANIMATED NUMBERS COUNTER
-        document.addEventListener("DOMContentLoaded", () => {
-             function animateValue(obj, start, end, duration) {
-              let startTimestamp = null;
-              const suffix = obj.getAttribute('data-suffix') || "";
-              const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                const currentVal = Math.floor(progress * (end - start) + start);
-                obj.textContent = currentVal + suffix;
-                if (progress < 1) {
-                  window.requestAnimationFrame(step);
-                }
-              };
-              window.requestAnimationFrame(step);
-            }
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        const counters = entry.target.querySelectorAll('.counter-anim');
-                        counters.forEach((counter) => {
-                            const target = parseInt(counter.getAttribute('data-target'));
-                            animateValue(counter, 0, target, 2000);
-                        });
-                        observer.disconnect();
-                    }
-                });
-            });
-            const statsSection = document.getElementById('about-stats-trigger');
-            if(statsSection) {
-                observer.observe(statsSection);
-            }
-        });
-
-        // 6. OPTIMIZED SIDEBAR KILLER
-        document.addEventListener("DOMContentLoaded", function() {
-            if (window.location.pathname.includes("/about")) {
-                const elementsToHide = document.querySelectorAll(
-                    '.sidebar, .tebex-sidebar, .module-header, .panel-heading, .col-md-3, .col-lg-3, .col-md-4, .col-lg-4'
-                );
+            <div class="products-grid" id="packages-grid">
+                {% for package in display_packages %}
                 
-                elementsToHide.forEach(el => {
-                    el.style.display = 'none';
-                    el.style.visibility = 'hidden'; 
-                });
+                <a href="/package/{{ package.id }}" class="product-card" style="text-decoration: none;">
+                    
+                    <!-- NEU: Versteckte Beschreibung für JS-Version-Scanner -->
+                    <div class="product-desc-raw" style="display:none;">{{ package.description }}</div>
 
-                const contentCol = document.querySelector('.col-md-8, .col-lg-8, .col-md-9, .col-lg-9');
-                if(contentCol) {
-                    contentCol.style.width = '100%';
-                    contentCol.style.flex = '0 0 100%';
-                    contentCol.style.maxWidth = '100%';
+                    <div class="product-image">
+                        {% if package.discount.applied %}
+                        <div style="position: absolute; top: 15px; right: 15px; background: #ef4444; color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; z-index: 10;">
+                            SALE
+                        </div>
+                        {% endif %}
+                        
+                        {% if package.image.url %}
+                            <img src="{{ package.image.url }}" alt="{{ package.name }}" loading="lazy" decoding="async">
+                        {% else %}
+                            <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background: #121214;">
+                                <i class="fas fa-cube fa-3x" style="color: rgba(255,255,255,0.05);"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="product-content">
+                        <div class="product-title">{{ package.name }}</div>
+                        
+                        <!-- AUTOMATIC COMPATIBILITY BADGES (SMART TAG DETECTION) -->
+                        {% if show_badges %}
+                            {% set desc_clean = package.description|lower %}
+                            
+                            <!-- 1. Check if 'tags:' keyword exists to enable smart mode -->
+                            {% set tag_mode_active = 'tags:' in desc_clean %}
+                            
+                            <!-- 2. Logic: Show badge ONLY if (Tag Mode is ON AND Keyword found) OR (Explicit [bracket] tag found) -->
+                            
+                            {% set hasESX = (tag_mode_active and 'esx' in desc_clean) or '[esx]' in desc_clean %}
+                            {% set hasQB = (tag_mode_active and ('qbcore' in desc_clean or 'qb-core' in desc_clean)) or '[qbcore]' in desc_clean %}
+                            {% set hasOpenSource = (tag_mode_active and ('open source' in desc_clean or 'opensource' in desc_clean)) or '[open source]' in desc_clean or '[opensource]' in desc_clean %}
+                            {% set hasEscrow = (tag_mode_active and 'escrow' in desc_clean) or '[escrow]' in desc_clean %}
+
+                            <!-- WICHTIG: Klasse 'product-badges' hinzugefügt für JS Targeting -->
+                            <div class="product-badges" style="display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap;">
+                                {% if hasESX or hasQB or hasOpenSource or hasEscrow %}
+                                
+                                    {% if hasESX %}
+                                    <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 4px 8px; font-size: 0.7rem; font-weight: 600; color: #e4e4e7; display: flex; align-items: center; gap: 6px;">
+                                        <i class="fas fa-server" style="color: #fbbf24; margin-right: 4px;"></i> ESX
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if hasQB %}
+                                    <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 4px 8px; font-size: 0.7rem; font-weight: 600; color: #e4e4e7; display: flex; align-items: center; gap: 6px;">
+                                        <i class="fas fa-cube" style="color: #22d3ee; margin-right: 4px;"></i> QBCore
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if hasOpenSource %}
+                                    <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 4px 8px; font-size: 0.7rem; font-weight: 600; color: #e4e4e7; display: flex; align-items: center; gap: 6px;">
+                                        <i class="fas fa-code-branch" style="color: #34d399; margin-right: 4px;"></i> Open Src
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if hasEscrow %}
+                                    <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 4px 8px; font-size: 0.7rem; font-weight: 600; color: #e4e4e7; display: flex; align-items: center; gap: 6px;">
+                                        <i class="fas fa-lock" style="color: #fb7185; margin-right: 4px;"></i> Escrow
+                                    </div>
+                                    {% endif %}
+
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                        
+                        <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding-top: 20px;">
+                            <div class="product-price">
+                                {% if package.price > 0 %}
+                                    {% if package.discount.applied %}
+                                        <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                                            <small style="text-decoration: line-through; color: var(--text-muted); font-size: 0.8rem;">
+                                                {{ package.discount.original|money }} {{ basket.currency }}
+                                            </small>
+                                            <span style="color: #ef4444;">
+                                                {{ package.price|money }} <small>{{ basket.currency }}</small>
+                                            </span>
+                                        </div>
+                                    {% else %}
+                                        <span>
+                                            {{ package.price|money }} <small>{{ basket.currency }}</small>
+                                        </span>
+                                    {% endif %}
+                                {% else %}
+                                    <span style="color: #10b981;">{{ __("Free") }}</span>
+                                {% endif %}
+                            </div>
+
+                            <span class="product-action-btn" style="border-radius: 6px; font-size: 0.8rem;">
+                                {{ __("View") }}
+                            </span>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+
+            <div id="no-search-results" style="display: none; text-align: center; padding: 50px 0; color: var(--text-muted);">
+                <p style="font-size: 0.95rem;">{{ __("No matching packages found.") }}</p>
+            </div>
+        {% endif %}
+
+        <!-- Minimal Empty State -->
+        {% if subcategories|length == 0 and display_packages|length == 0 %}
+            <div class="animate-in" style="margin: 60px auto; text-align: center; max-width: 500px;">
+                <div style="margin-bottom: 20px; opacity: 0.3;">
+                    <i class="fas fa-box-open fa-3x"></i>
+                </div>
+                <h3 style="font-size: 1.3rem; margin-bottom: 10px; color: #fff;">{{ __("Empty Category") }}</h3>
+                <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 0.95rem;">
+                    {{ __("There are no packages here yet.") }}
+                </p>
+                <a href="/" class="btn btn-secondary btn-sm">
+                    {{ __("Go Back") }}
+                </a>
+            </div>
+        {% endif %}
+        
+    </main>
+</div>
+
+<!-- JS für Live-Suche UND Versions-Badge -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // 1. LIVE SEARCH LOGIC
+    const searchInput = document.getElementById('searchInput');
+    const packagesGrid = document.getElementById('packages-grid');
+    const noResultsMsg = document.getElementById('no-search-results');
+    
+    if (searchInput && packagesGrid) {
+        searchInput.addEventListener('keyup', function() {
+            const filter = this.value.toLowerCase();
+            const cards = packagesGrid.querySelectorAll('.product-card');
+            let hasVisible = false;
+
+            cards.forEach(card => {
+                const titleEl = card.querySelector('.product-title');
+                if (titleEl) {
+                    const titleText = titleEl.textContent || titleEl.innerText;
+                    if (titleText.toLowerCase().indexOf(filter) > -1) {
+                        card.style.display = "";
+                        hasVisible = true;
+                    } else {
+                        card.style.display = "none";
+                    }
                 }
+            });
+
+            if (noResultsMsg) {
+                noResultsMsg.style.display = hasVisible ? 'none' : 'block';
             }
         });
+    }
 
-        /* ============================================================
-           NEU: WARENKORB REDIRECT LOGIK
-           Leitet nach Discord-Login/Optionen direkt zum Warenkorb
-           ============================================================ */
+    // 2. AUTO VERSION BADGE (NEU)
+    // Scannt alle Karten nach "Version: X.X" und fügt Badge hinzu
+    const productCards = document.querySelectorAll('.product-card');
+    
+    productCards.forEach(card => {
+        const descEl = card.querySelector('.product-desc-raw');
+        if(!descEl) return;
+        
+        // Versuche Version aus verstecktem Text zu lesen
+        // Akzeptiert "Version: 1.2", "Version: 1.5.0", "Version: Current" etc.
+        const descText = descEl.innerText;
+        const match = descText.match(/Version:\s*([^\n\r]+)/i);
+        
+        if(match && match[1]) {
+            let versionText = match[1].trim();
+            if(versionText.length > 20) versionText = versionText.substring(0, 20); // Safety limit
 
-        // Überschreibt die Standard-Funktion für den Login-Return
-        async function maybeOpenOptionsPopupAfterLogin() {
-            if (!location.pathname.startsWith('/checkout/packages/add/')) {
-                return;
+            // Gleiches Design wie die ESX/QB Badges oben
+            const badgeHTML = `
+                <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 4px 8px; font-size: 0.7rem; font-weight: 600; color: #e4e4e7; display: flex; align-items: center; gap: 6px;">
+                    <i class="fas fa-tag" style="color: #a78bfa; margin-right: 4px;"></i> ${versionText}
+                </div>
+            `;
+
+            // Badge Container finden
+            let badgeContainer = card.querySelector('.product-badges');
+            
+            // Wenn kein Container existiert (z.B. weil kein ESX/QB Tag gefunden wurde) -> Erstellen
+            if(!badgeContainer) {
+                badgeContainer = document.createElement('div');
+                badgeContainer.className = 'product-badges';
+                badgeContainer.style.cssText = "display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap;";
+                
+                // Vor dem Footer (Preis/Button) einfügen
+                const contentDiv = card.querySelector('.product-content');
+                // Der Footer ist das letzte Element (display: flex; justify-content: space-between...)
+                const footerRow = contentDiv.lastElementChild; 
+                contentDiv.insertBefore(badgeContainer, footerRow);
             }
-
-            const splitPath = location.pathname.split('/');
-            const packageId = splitPath[4];
-            const type = splitPath[5];
-            const giftTo = new URL(location.href).searchParams.get('username');
-
-            if (!packageId || !type) return;
-
-            const optionsCont = document.body.querySelector('[data-popup].store-product-options');
-            if (!optionsCont) return;
-
-            const options = document.createDocumentFragment();
-            options.append(...optionsCont.children);
-            optionsCont.remove();
-
-            const success = await openOptionsFormPopup({
-                packageId,
-                type,
-                options,
-                giftTo
-            });
-
-            if (success) {
-                // WICHTIG: Hier findet der Redirect statt!
-                window.location.href = '/checkout/basket';
-            } else {
-                setTimeout(() => location.href = `/package/${packageId}`, 3000);
-            }
+            
+            // Badge anhängen
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = badgeHTML;
+            badgeContainer.appendChild(tempDiv.firstElementChild);
         }
+    });
 
-        // Überschreibt die Popup-Funktion, um den Redirect auszulösen
-        function openOptionsFormPopup({ packageId, type, options, giftTo }) {
-            return new Promise(resolve => {
-                const container = document.createElement('div');
-                container.classList.value = 'popup product-options-popup';
+});
+</script>
 
-                const scrollContainer = document.createElement('div');
-                scrollContainer.classList.value = 'popup-scroll-cont';
-                scrollContainer.addEventListener('mousedown', e => {
-                    if (e.target === scrollContainer) {
-                        closePopup(container, false, true);
-                        resolve(false);
-                    }
-                });
-
-                container.appendChild(scrollContainer);
-
-                const closeButton = document.createElement('button');
-                closeButton.textContent = __('Close');
-                closeButton.classList.value = 'popup-close';
-                closeButton.addEventListener('click', () => {
-                    closePopup(container, false, true);
-                    resolve(false);
-                });
-
-                const contentEl = document.createElement('div');
-                contentEl.classList.value = 'popup-content store-product-options';
-                contentEl.appendChild(closeButton);
-
-                scrollContainer.appendChild(contentEl);
-
-                document.documentElement.classList.add('no-scroll');
-                document.body.appendChild(container);
-
-                contentEl.appendChild(options);
-
-                const form = contentEl.querySelector('form');
-
-                if (!form) {
-                    closePopup(container, false, true);
-                    return resolve(false);
-                }
-
-                form.addEventListener('submit', async e => {
-                    e.preventDefault();
-
-                    const isValid = form.reportValidity();
-                    if (!isValid) {
-                        newToast(__('Please fill in all fields'), 'error');
-                        return;
-                    }
-
-                    const actions = form.querySelector('.actions');
-                    actions?.classList.add('updating');
-
-                    const formDataObj = [...new FormData(form).entries()]
-                        .reduce((obj, [key, value]) => {
-                            obj[key] = value;
-                            return obj;
-                        }, {});
-
-                    const result = await addToBasketWithOptions(
-                        packageId,
-                        type,
-                        formDataObj,
-                        giftTo
-                    );
-
-                    actions?.classList.remove('updating');
-
-                    if (result.message) {
-                        newToast(result.message, result.status ? 'info' : 'error');
-                    }
-
-                    if (result.status) {
-                        closePopup(container, false, true);
-                        
-                        // WICHTIG: Sofortiger Redirect zum Warenkorb
-                        window.location.href = '/checkout/basket';
-                        return; 
-                    } else if (!result.message) {
-                        newToast(__('Failed to add to basket'), 'error');
-                        await new Promise(r => setTimeout(r, 3000));
-                    }
-
-                    resolve(result.status);
-                });
-            });
-        }
-    </script>
-</body>
-</html>
+{% endblock %}
