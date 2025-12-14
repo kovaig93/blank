@@ -105,6 +105,18 @@
             </a>
         </div>
 
+        <div class="hero-btns animate-in delay-3" style="margin-top: 15px;">
+            {% if store.categories|length > 0 %}
+                <a href="/category/{{ store.categories[0].id }}" class="btn btn-primary">
+                    <i class="fas fa-shopping-bag"></i> Farms &amp; Bases
+                </a>
+            {% else %}
+                <a href="#" class="btn btn-primary">
+                    <i class="fas fa-shopping-bag"></i> Farms &amp; Bases
+                </a>
+            {% endif %}
+        </div>
+
         <div class="animate-in delay-3">
             <div class="hero-separator"></div>
             
