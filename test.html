@@ -2,310 +2,1536 @@
 
 {% block content %}
 
-<!-- ========================================= -->
-<!-- CONFIG: BADGES ANZEIGE (HIER EINSTELLEN) -->
-<!-- true = Anzeigen | false = Ausblenden -->
-{% set show_badges = true %}
-<!-- ========================================= -->
+<!-- === ANNOUNCEMENT BAR === -->
+<div class="announcement-bar">
+    <div class="announcement-track">
+        
+        <!-- Inhalt: BLACKWEEK SALE & New Script Available (20x Loop) -->
 
-<!-- TECH DASHBOARD HEADER -->
-<section class="store-header-dashboard">
+        <div class="announcement-content"><span>🔥 <strong>NEW KITS AVAILABLE</strong></span></div>
+        <div class="announcement-content"><span>🚜 New Farms Available</span></div>
+        
+        <div class="announcement-content"><span>🔥 <strong>NEW KITS AVAILABLE</strong></span></div>
+        <div class="announcement-content"><span>🚜 New Farms Available</span></div>
+
+        <div class="announcement-content"><span>🔥 <strong>NEW KITS AVAILABLE</strong></span></div>
+        <div class="announcement-content"><span>🚜 New Farms Available</span></div>
+
+        <div class="announcement-content"><span>🔥 <strong>NEW KITS AVAILABLE</strong></span></div>
+        <div class="announcement-content"><span>🚜 New Farms Available</span></div>
+
+        <div class="announcement-content"><span>🔥 <strong>NEW KITS AVAILABLE</strong></span></div>
+        <div class="announcement-content"><span>🚜 New Farms Available</span></div>
+
+        <div class="announcement-content"><span>🔥 <strong>NEW KITS AVAILABLE</strong></span></div>
+        <div class="announcement-content"><span>🚜 New Farms Available</span></div>
+
+        <div class="announcement-content"><span>🔥 <strong>NEW KITS AVAILABLE</strong></span></div>
+        <div class="announcement-content"><span>🚜 New Farms Available</span></div>
+
+        <div class="announcement-content"><span>🔥 <strong>NEW KITS AVAILABLE</strong></span></div>
+        <div class="announcement-content"><span>🚜 New Farms Available/span></div>
+
+        <div class="announcement-content"><span>🔥 <strong>NEW KITS AVAILABLE</strong></span></div>
+        <div class="announcement-content"><span>🚜 New Farms Available</span></div>
+
+        <div class="announcement-content"><span>🔥 <strong>NEW KITS AVAILABLE</strong></span></div>
+        <div class="announcement-content"><span>🚜 New Farms Available</span></div>
+
+    </div>
+</div>
+<!-- === ENDE ANNOUNCEMENT BAR === -->
+
+<!-- Hero Section (Landing) -->
+<section class="hero-landing">
+    
+    <!-- === INTERACTIVE CANVAS BACKGROUND === -->
+    <div id="hero-canvas-wrapper">
+        <canvas id="hero-canvas"></canvas>
+    </div>
+
+    <!-- BACKGROUND IMAGE / GIF (ACTIVATED) -->
+    <!-- Unterstützt nun GIFs nativ durch img-Tag statt CSS-Background -->
+    <div class="hero-media-bg">
+        {% if theme.hero_image %}
+            <!-- Nutzt die Variable aus den Theme-Einstellungen -->
+            <img src="{{ theme.hero_image }}" alt="Hero Background" loading="eager">
+        {% else %}
+            <!-- Fallback: Hier manuell Link eintragen, falls keine Variable genutzt wird -->
+            <!-- <img src="DEIN_BILD_LINK_HIER.gif" alt="Hero Background" loading="eager"> -->
+        {% endif %}
+        <div class="hero-media-overlay"></div>
+    </div>
+
     <div class="container">
-        <div class="dashboard-layout">
+        <div class="animate-in delay-1">
+            <!-- FIX: Farbe auf Variable gesetzt -->
+            <span style="background: rgba(var(--accent-rgb), 0.1); color: var(--accent-primary); padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
+                Welcome to {{ store.name }}
+            </span>
+        </div>
+        
+        <h1 class="animate-in delay-2" style="margin-top: 30px;">
+            Number #1 Donut Store<br>
+            <span class="text-gradient">Top Tier Service</span>
+        </h1>
+        
+        <p class="animate-in delay-3">
+            {{ store.description }}
+        </p>
+        
+        <div class="hero-btns animate-in delay-3">
+            {% if store.categories|length > 0 %}
+                <a href="/category/{{ store.categories[0].id }}" class="btn btn-primary">
+                    <i class="fas fa-shopping-bag"></i> Visit Store
+                </a>
+            {% else %}
+                <a href="#" class="btn btn-primary">
+                    <i class="fas fa-shopping-bag"></i> Visit Store
+                </a>
+            {% endif %}
             
-            <!-- LEFT: Info & Title -->
-            <div class="dashboard-info animate-in">
-                <!-- Breadcrumbs -->
-                <div class="dashboard-breadcrumbs">
-                    <a href="/">Home</a> 
-                    {% if category.name %}
-                        / <span>{{ category.name }}</span>
-                    {% endif %}
+            <!-- NEU: Join Community Button mit integriertem Counter Badge -->
+            <!-- LINK ENTFERNT / PLATZHALTER EINGEFÜGT -->
+            <a href="https://discord.gg/ely" target="_blank" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 12px; padding-right: 8px;">
+                <i class="fab fa-discord"></i> 
+                <span>Join Community</span>
+                
+                <!-- Counter Badge -->
+                <div style="background: rgba(255, 255, 255, 0.1); color: #fff; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 6px; border: 1px solid rgba(255,255,255,0.1);">
+                    <span style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 8px #22c55e;"></span>
+                    <span id="discord-counter">...</span>
+                </div>
+            </a>
+        </div>
+
+        <div class="animate-in delay-3">
+            <div class="hero-separator"></div>
+            
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number">
+                        <!-- ID für Odometer Animation -->
+                        <span id="server-counter">...</span>+
+                    </div>
+                    <div class="stat-label">Happy Customers</div>
                 </div>
 
-                <!-- Title -->
-                <h1 class="dashboard-title">
-                    {% if category.name %}
-                        {{ category.name }}
-                    {% else %}
-                        Store Catalog
-                    {% endif %}
-                </h1>
+                <div class="stat-vertical-line"></div>
 
-                <!-- Description -->
-                {% if category.description %}
-                    <p class="dashboard-desc">
-                        {{ category.description|raw }}
-                    </p>
-                {% else %}
-                    <p class="dashboard-desc">
-                        Browse our collection of high-quality resources optimized for performance.
-                    </p>
-                {% endif %}
-            </div>
-
-            <!-- RIGHT: Search & Action -->
-            <div class="dashboard-actions animate-in delay-1">
-                <div class="search-dashboard">
-                    <input type="text" id="searchInput" class="search-input-dashboard" placeholder="{{ __("Search packages...") }}" autocomplete="off">
-                    <i class="fas fa-search search-icon-dashboard"></i>
+                <div class="stat-item">
+                    <div class="stat-number text-gradient">1-10 Mins</div>
+                    <div class="stat-label">Fast Delivery</div>
                 </div>
+                
+                <!-- Alte separate Statistik entfernt -->
             </div>
-
         </div>
     </div>
 </section>
 
-<!-- Main Store Content -->
-<div class="container store-container" style="padding-bottom: 80px;">
-    
-    <main class="animate-in delay-2">
 
-        <!-- 1. Subcategories Section -->
-        {% if subcategories|length > 0 %}
-            <div style="margin-bottom: 50px; margin-top: 40px;">
-                <div class="section-title" style="text-align: left; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;">
-                    <h2 style="font-size: 1.3rem; margin: 0; color: #fff; font-weight: 700;">{{ __("Categories") }}</h2>
-                </div>
-                
-                <div class="products-grid">
-                    {% for subcat in subcategories %}
-                    <a href="/category/{{ subcat.id }}" class="product-card" style="text-decoration: none;">
-                        <div class="category-card-inner">
-                             <i class="fas fa-folder" style="opacity: 0.8;"></i>
-                             <div class="product-title" style="margin-top: 15px; margin-bottom: 0; font-size: 1rem; font-weight: 600;">
-                                {{ subcat.name }}
-                             </div>
-                        </div>
-                    </a>
-                    {% endfor %}
-                </div>
-            </div>
-        {% endif %}
+
+<!-- Features Section (Why Choose Us) -->
+<section class="features-section">
+    <div class="container">
+        <div class="section-title animate-in">
+            <h2>Why Choose Us?</h2>
+            <p style="color: var(--text-muted);">Designed for the best quality.</p>
+        </div>
         
-        <!-- 2. Packages Section -->
-        {% set display_packages = category.packages %}
-        {% if display_packages is not defined or display_packages|length == 0 %}
-             {% set display_packages = packages %}
-        {% endif %}
+        <div class="features-grid animate-in delay-1">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+                <h3>Fast Delivery</h3>
+                <p style="color: var(--text-muted); margin-top: 15px;">
+                    Fast delivery & Friendly staff.
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                <h3>Secure & Safe</h3>
+                <p style="color: var(--text-muted); margin-top: 15px;">
+                    Maximum safety and security.
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-headset"></i></div>
+                <h3>24/7 Support</h3>
+                <p style="color: var(--text-muted); margin-top: 15px;">
+                    Our team is always ready to help you.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
 
-        {% if display_packages|length > 0 %}
-            <div id="packages-section" style="margin-bottom: 25px; margin-top: 40px;">
-                 <div class="section-title" style="text-align: left; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px;">
-                    <h2 style="font-size: 1.3rem; margin: 0; color: #fff; font-weight: 700;">{{ __("Available Packages") }}</h2>
+<!-- === FAQ SECTION (VISUAL UPGRADE) === -->
+<section class="faq-section">
+    
+    <!-- Background Glow Effect -->
+    <div class="faq-glow"></div>
+
+    <div class="container faq-container">
+        
+        <div class="section-title animate-in">
+            <h2>Frequently Asked Questions</h2>
+            <p style="color: var(--text-muted);">Common questions about our services.</p>
+        </div>
+
+        <div class="faq-list animate-in delay-1">
+            
+            <!-- Question 1 -->
+            <div class="faq-item">
+                <div class="faq-header">
+                    <span class="faq-question">How do I receive my product after the purchase?</span>
+                    <div class="faq-toggle">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="faq-body">
+                    <div class="faq-content">
+                        After successful payment, please head to our Discord server and open a ticket. Our staff team will help you shortly. Money orders are delivered automatically, so no ticket is needed.
+                    </div>
                 </div>
             </div>
-            
-            <div class="products-grid" id="packages-grid">
-                {% for package in display_packages %}
-                
-                <a href="/package/{{ package.id }}" class="product-card" style="text-decoration: none;">
-                    
-                    <!-- NEU: Versteckte Beschreibung für JS-Version-Scanner -->
-                    <div class="product-desc-raw" style="display:none;">{{ package.description }}</div>
 
-                    <div class="product-image">
-                        {% if package.discount.applied %}
-                        <div style="position: absolute; top: 15px; right: 15px; background: #ef4444; color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; z-index: 10;">
+            <!-- Question 2 -->
+            <div class="faq-item">
+                <div class="faq-header">
+                    <span class="faq-question">How long does delivery take?</span>
+                    <div class="faq-toggle">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="faq-body">
+                    <div class="faq-content">
+                        Delivery should take no longer than an hour, but please know that we are located in Europe and are not always online.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="faq-item">
+                <div class="faq-header">
+                    <span class="faq-question">Do you provide refunds?</span>
+                    <div class="faq-toggle">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="faq-body">
+                    <div class="faq-content">
+                        Refunds will be issued only if the issue is determined to be on our end. If the issue is not caused by us, we are unable to provide a refund. We strive to ensure the best service and encourage you to contact us with any concerns for prompt resolution.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="faq-item">
+                <div class="faq-header">
+                    <span class="faq-question">Do you offer support?</span>
+                    <div class="faq-toggle">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="faq-body">
+                    <div class="faq-content">
+                        Absolutely! Our support team is available on our Discord server. Simply create a ticket if you need help with your issue.
+                    </div>
+                </div>
+            </div>
+
+<!-- === END FAQ SECTION === -->
+
+<!-- Reviews Section -->
+<section class="reviews-section">
+    <div class="container">
+        <div class="section-title animate-in">
+            <h2>Loved by Community</h2>
+            <p style="color: var(--text-muted);">Trusted by over 1500+ players worldwide.</p>
+        </div>
+
+        <div class="reviews-carousel-wrapper animate-in delay-2">
+            <button class="carousel-btn prev" id="rev-prev">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <div class="reviews-track-window">
+                <div class="reviews-track" id="reviews-track">
+                    <!-- Reviews Content -->
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="review-avatar">M</div>
+                            <div class="review-info">
+                                <span class="review-name">Mikes_2</span>
+                                <span class="review-role">Bulk Buyer</span>
+                            </div>
+                            <div class="review-stars" data-rating="5" style="white-space: nowrap; flex-shrink: 0;"></div>
+                        </div>
+                        <p class="review-text">
+                            "Actually legit."
+                        </p>
+                    </div>
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="review-avatar" style="background: var(--accent-secondary);">J</div>
+                            <div class="review-info">
+                                <span class="review-name">Kian24</span>
+                                <span class="review-role">Loyal Customer</span>
+                            </div>
+                            <div class="review-stars" data-rating="4" style="white-space: nowrap; flex-shrink: 0;"></div>
+                        </div>
+                        <p class="review-text">
+                            "Top quality. Been trying to grind, but this boosted so much. 10/10."
+                        </p>
+                    </div>
+                     <div class="review-card">
+                        <div class="review-header">
+                            <div class="review-avatar" style="background: #10b981;">S</div>
+                            <div class="review-info">
+                                <span class="review-name">SharoUin</span>
+                                <span class="review-role">Player</span>
+                            </div>
+                            <div class="review-stars" data-rating="4" style="white-space: nowrap; flex-shrink: 0;"></div>
+                        </div>
+                        <p class="review-text">
+                            "Very easy delivery, very fast"
+                        </p>
+                    </div>
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="review-avatar" style="background: #ef4444;">A</div>
+                            <div class="review-info">
+                                <span class="review-name">SarahP_88</span>
+                                <span class="review-role">Player</span>
+                            </div>
+                            <div class="review-stars" data-rating="5" style="white-space: nowrap; flex-shrink: 0;"></div>
+                        </div>
+                        <p class="review-text">
+                            "Awesome shop, fastest delivery and quality."
+                        </p>
+                    </div>
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="review-avatar" style="background: #3b82f6;">D</div>
+                            <div class="review-info">
+                                <span class="review-name">TacticalGamer</span>
+                                <span class="review-role">Player</span>
+                            </div>
+                            <div class="review-stars" data-rating="3" style="white-space: nowrap; flex-shrink: 0;"></div>
+                        </div>
+                        <p class="review-text">
+                            "Top quality items and money, would recommend"
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="carousel-btn next" id="rev-next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Packages Section -->
+{% if store.featuredPackages|length > 0 %}
+<section class="store-layout" style="padding-top: 40px;"> 
+    <div class="container">
+        <div class="section-title animate-in">
+            <h2>Featured Products</h2>
+            <p style="color: var(--text-muted);">Check out our most popular resources.</p>
+        </div>
+
+        <div class="products-grid animate-in delay-2">
+            {% for package in store.featuredPackages %}
+            <a href="/package/{{ package.id }}" class="product-card" style="text-decoration: none;">
+                <div class="product-image">
+                    {% if package.image.url %}
+                        <img src="{{ package.image.url }}" alt="{{ package.name }}" loading="lazy" decoding="async">
+                    {% else %}
+                        <i class="fas fa-cube fa-4x" style="color: rgba(255,255,255,0.1);"></i>
+                    {% endif %}
+                    
+                    {% if package.discount.applied %}
+                        <div style="position: absolute; top: 10px; right: 10px; background: #ef4444; color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 800; box-shadow: 0 2px 5px rgba(0,0,0,0.5);">
                             SALE
                         </div>
-                        {% endif %}
-                        
-                        {% if package.image.url %}
-                            <img src="{{ package.image.url }}" alt="{{ package.name }}" loading="lazy" decoding="async">
-                        {% else %}
-                            <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; background: #121214;">
-                                <i class="fas fa-cube fa-3x" style="color: rgba(255,255,255,0.05);"></i>
-                            </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="product-content">
-                        <div class="product-title">{{ package.name }}</div>
-                        
-                        <!-- AUTOMATIC COMPATIBILITY BADGES (SMART TAG DETECTION) -->
-                        {% if show_badges %}
-                            {% set desc_clean = package.description|lower %}
-                            
-                            <!-- 1. Check if 'tags:' keyword exists to enable smart mode -->
-                            {% set tag_mode_active = 'tags:' in desc_clean %}
-                            
-                            <!-- 2. Logic: Show badge ONLY if (Tag Mode is ON AND Keyword found) OR (Explicit [bracket] tag found) -->
-                            
-                            {% set hasESX = (tag_mode_active and 'esx' in desc_clean) or '[esx]' in desc_clean %}
-                            {% set hasQB = (tag_mode_active and ('qbcore' in desc_clean or 'qb-core' in desc_clean)) or '[qbcore]' in desc_clean %}
-                            {% set hasOpenSource = (tag_mode_active and ('open source' in desc_clean or 'opensource' in desc_clean)) or '[open source]' in desc_clean or '[opensource]' in desc_clean %}
-                            {% set hasEscrow = (tag_mode_active and 'escrow' in desc_clean) or '[escrow]' in desc_clean %}
-
-                            <!-- WICHTIG: Klasse 'product-badges' hinzugefügt für JS Targeting -->
-                            <div class="product-badges" style="display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap;">
-                                {% if hasESX or hasQB or hasOpenSource or hasEscrow %}
-                                
-                                    {% if hasESX %}
-                                    <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 4px 8px; font-size: 0.7rem; font-weight: 600; color: #e4e4e7; display: flex; align-items: center; gap: 6px;">
-                                        <i class="fas fa-server" style="color: #fbbf24; margin-right: 4px;"></i> ESX
-                                    </div>
-                                    {% endif %}
-                                    
-                                    {% if hasQB %}
-                                    <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 4px 8px; font-size: 0.7rem; font-weight: 600; color: #e4e4e7; display: flex; align-items: center; gap: 6px;">
-                                        <i class="fas fa-cube" style="color: #22d3ee; margin-right: 4px;"></i> QBCore
-                                    </div>
-                                    {% endif %}
-                                    
-                                    {% if hasOpenSource %}
-                                    <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 4px 8px; font-size: 0.7rem; font-weight: 600; color: #e4e4e7; display: flex; align-items: center; gap: 6px;">
-                                        <i class="fas fa-code-branch" style="color: #34d399; margin-right: 4px;"></i> Open Src
-                                    </div>
-                                    {% endif %}
-                                    
-                                    {% if hasEscrow %}
-                                    <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 4px 8px; font-size: 0.7rem; font-weight: 600; color: #e4e4e7; display: flex; align-items: center; gap: 6px;">
-                                        <i class="fas fa-lock" style="color: #fb7185; margin-right: 4px;"></i> Escrow
-                                    </div>
-                                    {% endif %}
-
-                                {% endif %}
-                            </div>
-                        {% endif %}
-                        
-                        <div style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; padding-top: 20px;">
-                            <div class="product-price">
-                                {% if package.price > 0 %}
-                                    {% if package.discount.applied %}
-                                        <div style="display: flex; flex-direction: column; align-items: flex-start;">
-                                            <small style="text-decoration: line-through; color: var(--text-muted); font-size: 0.8rem;">
-                                                {{ package.discount.original|money }} {{ basket.currency }}
-                                            </small>
-                                            <span style="color: #ef4444;">
-                                                {{ package.price|money }} <small>{{ basket.currency }}</small>
-                                            </span>
-                                        </div>
-                                    {% else %}
-                                        <span>
-                                            {{ package.price|money }} <small>{{ basket.currency }}</small>
-                                        </span>
-                                    {% endif %}
-                                {% else %}
-                                    <span style="color: #10b981;">{{ __("Free") }}</span>
-                                {% endif %}
-                            </div>
-
-                            <span class="product-action-btn" style="border-radius: 6px; font-size: 0.8rem;">
-                                {{ __("View") }}
-                            </span>
-                        </div>
-                    </div>
-                </a>
-                {% endfor %}
-            </div>
-
-            <div id="no-search-results" style="display: none; text-align: center; padding: 50px 0; color: var(--text-muted);">
-                <p style="font-size: 0.95rem;">{{ __("No matching packages found.") }}</p>
-            </div>
-        {% endif %}
-
-        <!-- Minimal Empty State -->
-        {% if subcategories|length == 0 and display_packages|length == 0 %}
-            <div class="animate-in" style="margin: 60px auto; text-align: center; max-width: 500px;">
-                <div style="margin-bottom: 20px; opacity: 0.3;">
-                    <i class="fas fa-box-open fa-3x"></i>
+                    {% endif %}
                 </div>
-                <h3 style="font-size: 1.3rem; margin-bottom: 10px; color: #fff;">{{ __("Empty Category") }}</h3>
-                <p style="color: var(--text-muted); margin-bottom: 25px; font-size: 0.95rem;">
-                    {{ __("There are no packages here yet.") }}
-                </p>
-                <a href="/" class="btn btn-secondary btn-sm">
-                    {{ __("Go Back") }}
-                </a>
-            </div>
-        {% endif %}
+                <div class="product-content">
+                    <div class="product-title">{{ package.name }}</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="product-price">
+                             {% if package.price > 0 %}
+                                {% if package.discount.applied %}
+                                    <span style="text-decoration: line-through; font-size: 0.9rem; color: var(--text-muted); margin-right: 5px;">
+                                        {{ package.discount.original|money }}
+                                    </span>
+                                    <span style="color: #ef4444;">{{ package.price|money }} {{ basket.currency }}</span>
+                                {% else %}
+                                    {{ package.price|money }} {{ basket.currency }}
+                                {% endif %}
+                            {% else %}
+                                <span style="color: #10b981;">{{ __("Free") }}</span>
+                            {% endif %}
+                        </div>
+                        <span class="btn btn-secondary btn-sm" style="border-radius: 8px;">View</span>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
         
-    </main>
+        <div style="text-align: center; margin-top: 60px;" class="animate-in delay-3">
+            {% if store.categories|length > 0 %}
+                 <a href="/category/{{ store.categories[0].id }}" class="btn btn-secondary">View All Products</a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- WICHTIG: Versteckter Container für Tebex Module -->
+<div id="tebex-modules-hidden" style="display:none;">
+    {{ modules|raw }}
 </div>
 
-<!-- JS für Live-Suche UND Versions-Badge -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    
-    // 1. LIVE SEARCH LOGIC
-    const searchInput = document.getElementById('searchInput');
-    const packagesGrid = document.getElementById('packages-grid');
-    const noResultsMsg = document.getElementById('no-search-results');
-    
-    if (searchInput && packagesGrid) {
-        searchInput.addEventListener('keyup', function() {
-            const filter = this.value.toLowerCase();
-            const cards = packagesGrid.querySelectorAll('.product-card');
-            let hasVisible = false;
-
-            cards.forEach(card => {
-                const titleEl = card.querySelector('.product-title');
-                if (titleEl) {
-                    const titleText = titleEl.textContent || titleEl.innerText;
-                    if (titleText.toLowerCase().indexOf(filter) > -1) {
-                        card.style.display = "";
-                        hasVisible = true;
-                    } else {
-                        card.style.display = "none";
-                    }
-                }
-            });
-
-            if (noResultsMsg) {
-                noResultsMsg.style.display = hasVisible ? 'none' : 'block';
-            }
-        });
+<!-- STYLES -->
+<style>
+    /* FAQ SECTION STYLES (PREMIUM) */
+    .faq-section {
+        padding: 100px 0;
+        background: var(--bg-body);
+        position: relative;
+        overflow: hidden;
     }
 
-    // 2. AUTO VERSION BADGE (NEU)
-    // Scannt alle Karten nach "Version: X.X" und fügt Badge hinzu
-    const productCards = document.querySelectorAll('.product-card');
+    /* Ambient Glow Behind FAQ */
+    .faq-glow {
+        position: absolute;
+        width: 800px;
+        height: 600px;
+        background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+        opacity: 0.15;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        z-index: 0;
+        filter: blur(60px);
+    }
+
+    .faq-container {
+        position: relative;
+        z-index: 2;
+        max-width: 900px; /* Breiter für besseres Lesen */
+        margin: 0 auto;
+    }
     
-    productCards.forEach(card => {
-        const descEl = card.querySelector('.product-desc-raw');
-        if(!descEl) return;
-        
-        // Versuche Version aus verstecktem Text zu lesen
-        // Akzeptiert "Version: 1.2", "Version: 1.5.0", "Version: Current" etc.
-        const descText = descEl.innerText;
-        const match = descText.match(/Version:\s*([^\n\r]+)/i);
-        
-        if(match && match[1]) {
-            let versionText = match[1].trim();
-            if(versionText.length > 20) versionText = versionText.substring(0, 20); // Safety limit
+    .faq-item {
+        background: rgba(20, 20, 25, 0.6); /* Glassmorphism Base */
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: var(--radius-lg);
+        margin-bottom: 20px; /* Mehr Abstand */
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .faq-item:hover {
+        /* FIX: Farbe auf Variable gesetzt */
+        border-color: rgba(var(--accent-rgb), 0.3);
+        background: rgba(30, 30, 35, 0.8);
+        transform: translateY(-2px);
+    }
+    
+    .faq-item.active {
+        border-color: var(--accent-primary);
+        background: rgba(25, 25, 30, 0.95);
+        /* FIX: Farbe auf Variable gesetzt */
+        box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.15); /* Subtiler Glow wenn aktiv */
+    }
+    
+    .faq-header {
+        padding: 25px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+    }
+    
+    .faq-question {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #fff;
+        line-height: 1.4;
+    }
+    
+    /* Neuer Runder Toggle Button */
+    .faq-toggle {
+        width: 36px;
+        height: 36px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-left: 20px;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* Bouncy Transition */
+        color: var(--text-muted);
+        border: 1px solid transparent;
+    }
 
-            // Gleiches Design wie die ESX/QB Badges oben
-            const badgeHTML = `
-                <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 4px 8px; font-size: 0.7rem; font-weight: 600; color: #e4e4e7; display: flex; align-items: center; gap: 6px;">
-                    <i class="fas fa-tag" style="color: #a78bfa; margin-right: 4px;"></i> ${versionText}
-                </div>
-            `;
+    .faq-toggle i {
+        font-size: 0.9rem;
+        transition: transform 0.3s ease;
+    }
+    
+    .faq-item:hover .faq-toggle {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
 
-            // Badge Container finden
-            let badgeContainer = card.querySelector('.product-badges');
-            
-            // Wenn kein Container existiert (z.B. weil kein ESX/QB Tag gefunden wurde) -> Erstellen
-            if(!badgeContainer) {
-                badgeContainer = document.createElement('div');
-                badgeContainer.className = 'product-badges';
-                badgeContainer.style.cssText = "display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap;";
-                
-                // Vor dem Footer (Preis/Button) einfügen
-                const contentDiv = card.querySelector('.product-content');
-                // Der Footer ist das letzte Element (display: flex; justify-content: space-between...)
-                const footerRow = contentDiv.lastElementChild; 
-                contentDiv.insertBefore(badgeContainer, footerRow);
+    .faq-item.active .faq-toggle {
+        background: var(--accent-primary);
+        color: #fff;
+        transform: rotate(180deg);
+        box-shadow: 0 0 15px var(--accent-glow);
+    }
+    
+    .faq-body {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        background: rgba(0,0,0,0.15); /* Innen etwas dunkler */
+        border-top: 1px solid transparent;
+    }
+
+    .faq-item.active .faq-body {
+        border-top-color: rgba(255,255,255,0.05);
+    }
+    
+    .faq-content {
+        padding: 25px 30px 35px 30px;
+        color: var(--text-muted);
+        line-height: 1.7;
+        font-size: 1rem;
+    }
+
+
+    /* REVIEWS STYLES */
+    .reviews-carousel-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 40px;
+    }
+    .reviews-track-window {
+        width: 100%;
+        max-width: 1100px;
+        overflow: hidden;
+        padding: 40px 0;
+        mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+        -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+    }
+    .reviews-track {
+        display: flex;
+        gap: 30px;
+        width: max-content; 
+        padding-left: 50%;
+        will-change: transform;
+    }
+    .review-card {
+        width: 350px; 
+        min-width: 350px;
+        background: var(--bg-card);
+        padding: 30px;
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-color);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.5s ease;
+        opacity: 0.3;
+        transform: scale(0.85);
+        filter: blur(2px);
+        z-index: 1;
+    }
+    .review-card.active {
+        opacity: 1;
+        transform: scale(1.05);
+        filter: blur(0);
+        z-index: 10;
+        border-color: var(--accent-primary);
+        /* FIX: Farbe auf Variable gesetzt */
+        box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.2);
+    }
+    .carousel-btn {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        transition: 0.2s;
+        z-index: 20;
+        position: absolute;
+    }
+    .carousel-btn.prev { left: 0; }
+    .carousel-btn.next { right: 0; }
+    .carousel-btn:hover {
+        background: var(--accent-primary);
+        border-color: var(--accent-primary);
+        transform: scale(1.1);
+        /* FIX: Farbe auf Variable gesetzt */
+        box-shadow: 0 0 15px rgba(var(--accent-rgb), 0.4);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+        .review-card { width: 300px; min-width: 300px; }
+        .reviews-track-window { mask-image: none; -webkit-mask-image: none; }
+        .carousel-btn { width: 40px; height: 40px; font-size: 1rem; }
+    }
+
+    /* GENERAL STYLES */
+    .hero-separator {
+        width: 80px;
+        height: 2px;
+        background: rgba(255, 255, 255, 0.15);
+        margin: 40px auto; 
+        border-radius: 2px;
+    }
+    .hero-stats {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 50px;
+        margin-top: 20px;
+    }
+    .stat-item { text-align: center; }
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #fff;
+        line-height: 1.1;
+        font-variant-numeric: tabular-nums;
+        transition: color 0.3s ease;
+        /* Sicherstellen, dass die Odometer-Klasse hier gut aussieht */
+        display: inline-flex;
+        align-items: center;
+    }
+    .stat-update {
+        color: var(--accent-primary);
+        text-shadow: 0 0 15px var(--accent-primary);
+    }
+    .stat-label {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 5px;
+    }
+    .stat-vertical-line {
+        width: 1px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.1);
+    }
+    @media (max-width: 600px) {
+        .hero-stats { flex-direction: column; gap: 30px; }
+        .stat-vertical-line { width: 40px; height: 1px; }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // ========== SCOPE 0: FAQ ACCORDION LOGIC ==========
+        try {
+            const faqItems = document.querySelectorAll('.faq-item');
+            if (faqItems.length > 0) {
+                faqItems.forEach(item => {
+                    const header = item.querySelector('.faq-header');
+                    if (header) {
+                        header.addEventListener('click', () => {
+                            const isActive = item.classList.contains('active');
+                            faqItems.forEach(i => {
+                                i.classList.remove('active');
+                                const b = i.querySelector('.faq-body');
+                                if(b) b.style.maxHeight = null;
+                            });
+                            if (!isActive) {
+                                item.classList.add('active');
+                                const body = item.querySelector('.faq-body');
+                                if(body) body.style.maxHeight = body.scrollHeight + "px";
+                            }
+                        });
+                    }
+                });
             }
-            
-            // Badge anhängen
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = badgeHTML;
-            badgeContainer.appendChild(tempDiv.firstElementChild);
-        }
-    });
+        } catch(e) { console.warn("FAQ Logic Error:", e); }
 
-});
+        // ========== SCOPE 1: PAYMENTS MARQUEE ==========
+        try {
+            const source = document.getElementById('dux-payments-source');
+            const target = document.getElementById('recent-payments-target');
+            if (source && target) {
+                target.innerHTML = ''; 
+                const paymentsContainer = source.querySelector('.payments-marquee-container');
+                const paymentsTrack = source.querySelector('.payments-track');
+                
+                if (paymentsContainer) {
+                    target.appendChild(paymentsContainer);
+                    source.remove();
+
+                    if (paymentsTrack) {
+                        const items = Array.from(paymentsTrack.children);
+                        if (items.length > 0) {
+                            paymentsTrack.querySelectorAll('img').forEach(img => img.setAttribute('draggable', 'false'));
+                            const itemWidth = 300 + 15; 
+                            const screenWidth = window.innerWidth;
+                            const clonesNeeded = Math.ceil(screenWidth / (items.length * itemWidth)) + 2;
+                            
+                            for(let i=0; i<clonesNeeded; i++) {
+                                items.forEach(function(item) {
+                                    paymentsTrack.appendChild(item.cloneNode(true));
+                                });
+                            }
+                            let currentTranslate = 0;
+                            const speed = 0.5; 
+                            const contentWidth = items.length * itemWidth;
+                            
+                            function animate() {
+                                currentTranslate -= speed;
+                                if (currentTranslate <= -contentWidth) {
+                                    currentTranslate += contentWidth;
+                                }
+                                paymentsTrack.style.transform = `translate3d(${currentTranslate}px, 0, 0)`;
+                                requestAnimationFrame(animate);
+                            }
+                            animate();
+                        }
+                    }
+                } else {
+                     // Fallback falls kein Modul existiert
+                     target.innerHTML = '<div style="opacity:0.5; font-size:0.9rem;">No recent payments.</div>';
+                }
+            }
+        } catch(e) { console.warn("Payments Logic Error:", e); }
+
+        // ========== SCOPE 2: REVIEWS CAROUSEL ==========
+        try {
+            const starContainers = document.querySelectorAll('.review-stars[data-rating]');
+            starContainers.forEach(container => {
+                const rating = parseInt(container.getAttribute('data-rating') || 5);
+                let html = '';
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= rating) html += '<i class="fas fa-star"></i>';
+                    else html += '<i class="fas fa-star" style="opacity: 0.3;"></i>';
+                }
+                container.innerHTML = html;
+            });
+
+            const track = document.getElementById('reviews-track');
+            // Safely check if track exists before proceeding
+            if (track) {
+                const originalCards = Array.from(document.querySelectorAll('.review-card'));
+                const nextBtn = document.getElementById('rev-next');
+                const prevBtn = document.getElementById('rev-prev');
+                
+                if (originalCards.length > 0) {
+                    const clonesStart = originalCards.slice(-2).map(c => {
+                        const clone = c.cloneNode(true);
+                        clone.classList.add('clone');
+                        return clone;
+                    });
+                    const clonesEnd = originalCards.slice(0, 2).map(c => {
+                        const clone = c.cloneNode(true);
+                        clone.classList.add('clone');
+                        return clone;
+                    });
+
+                    clonesStart.reverse().forEach(c => track.insertBefore(c, track.firstChild));
+                    clonesEnd.forEach(c => track.appendChild(c));
+
+                    const allCards = Array.from(document.querySelectorAll('.review-card'));
+                    let currentIndex = 2; 
+                    let isTransitioning = false;
+
+                    const getCardWidth = () => {
+                        if(allCards.length === 0) return 380;
+                        const width = allCards[0].offsetWidth;
+                        const styles = window.getComputedStyle(track);
+                        const gap = parseFloat(styles.gap) || 30;
+                        return width + gap;
+                    };
+
+                    function updateCarousel(enableTransition = true) {
+                        if(allCards.length === 0) return;
+                        const cardFullWidth = getCardWidth();
+                        const cardActualWidth = allCards[0].offsetWidth;
+                        const offset = -(currentIndex * cardFullWidth) - (cardActualWidth / 2);
+                        if (enableTransition) {
+                            track.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+                        } else {
+                            track.style.transition = 'none';
+                        }
+                        track.style.transform = `translateX(${offset}px)`;
+
+                        allCards.forEach((card, index) => {
+                            if (index === currentIndex) {
+                                card.classList.add('active');
+                            } else {
+                                card.classList.remove('active');
+                            }
+                        });
+                    }
+                    
+                    // Initial update
+                    setTimeout(() => updateCarousel(false), 50);
+
+                    track.addEventListener('transitionend', () => {
+                        isTransitioning = false;
+                        const totalOriginals = originalCards.length; 
+                        const clonesAtStart = 2;
+                        if (currentIndex >= clonesAtStart + totalOriginals) {
+                            currentIndex = clonesAtStart;
+                            updateCarousel(false); 
+                        }
+                        else if (currentIndex < clonesAtStart) {
+                            currentIndex = clonesAtStart + totalOriginals - 1;
+                            updateCarousel(false);
+                        }
+                    });
+
+                    // SAFE EVENT LISTENERS
+                    if(nextBtn) {
+                        nextBtn.addEventListener('click', () => {
+                            if (isTransitioning) return;
+                            isTransitioning = true;
+                            currentIndex++;
+                            updateCarousel(true);
+                        });
+                    }
+                    
+                    if(prevBtn) {
+                        prevBtn.addEventListener('click', () => {
+                            if (isTransitioning) return;
+                            isTransitioning = true;
+                            currentIndex--;
+                            updateCarousel(true);
+                        });
+                    }
+
+                    window.addEventListener('resize', () => updateCarousel(false));
+                }
+            }
+        } catch(e) { console.warn("Reviews Logic Error:", e); }
+
+        // ========== SCOPE 3: ODOMETER SERVER COUNTER ==========
+        try {
+            const counterEl = document.getElementById('server-counter');
+            if (counterEl) {
+                const baseCount = 532;       
+                const incrementAmount = 2;   
+                const startDate = new Date('2025-11-20T00:00:00'); 
+
+                function calculateCurrentTarget() {
+                    const now = new Date();
+                    const timeDiff = now - startDate;
+                    // Safety check for invalid dates
+                    if(isNaN(timeDiff)) return baseCount;
+                    const unitsPassed = Math.floor(timeDiff / (1000 * 60 * 60 * 24)); 
+                    return baseCount + (Math.max(0, unitsPassed) * incrementAmount);
+                }
+                const targetValue = calculateCurrentTarget();
+
+                counterEl.innerHTML = ''; 
+                counterEl.classList.add('odometer-wrapper'); 
+                const valueStr = targetValue.toString();
+                const digits = [];
+
+                for (let i = 0; i < valueStr.length; i++) {
+                    const digitContainer = document.createElement('div');
+                    digitContainer.className = 'odometer-digit';
+                    const ribbon = document.createElement('div');
+                    ribbon.className = 'odometer-ribbon';
+                    for(let n = 0; n <= 9; n++) {
+                        const numDiv = document.createElement('div');
+                        numDiv.textContent = n;
+                        ribbon.appendChild(numDiv);
+                    }
+                    digitContainer.appendChild(ribbon);
+                    counterEl.appendChild(digitContainer);
+                    digits.push({ element: ribbon, value: parseInt(valueStr[i]) });
+                }
+
+                if ('IntersectionObserver' in window) {
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                digits.forEach((digit, index) => {
+                                    setTimeout(() => {
+                                        const percent = -(digit.value * 10);
+                                        digit.element.style.transform = `translateY(${percent}%)`;
+                                    }, index * 150); 
+                                });
+                                observer.unobserve(entry.target);
+                            }
+                        });
+                    }, { threshold: 0.5 });
+                    observer.observe(counterEl);
+                } else {
+                    // Fallback for older browsers
+                    digits.forEach((digit) => {
+                         const percent = -(digit.value * 10);
+                         digit.element.style.transform = `translateY(${percent}%)`;
+                    });
+                }
+            }
+        } catch(e) { console.warn("Counter Logic Error:", e); }
+        
+        // ========== SCOPE 4: CANVAS PARTICLE NETWORK & MULTI-STYLES ==========
+        try {
+            if (typeof themeConfig !== 'undefined' && themeConfig.enableCanvasParticles) {
+                const canvas = document.getElementById('hero-canvas');
+                if (canvas) {
+                    const ctx = canvas.getContext('2d');
+                    let width, height;
+                    let particles = [];
+                    
+                    // CONFIG & STYLE
+                    const style = themeConfig.heroBackgroundStyle || 'network'; // Default
+                    const isMobile = window.innerWidth < 768;
+
+                    // Color extraction
+                    let particleColor = '255, 255, 255'; 
+                    const styles = getComputedStyle(document.body);
+                    const accentRGB = styles.getPropertyValue('--accent-rgb');
+                    if(accentRGB) particleColor = accentRGB.trim();
+
+                    // MOUSE TRACKING
+                    let mouse = { x: null, y: null };
+                    window.addEventListener('mousemove', (e) => {
+                        const rect = canvas.getBoundingClientRect();
+                        mouse.x = e.clientX - rect.left;
+                        mouse.y = e.clientY - rect.top;
+                    });
+                    window.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+
+                    function resize() {
+                        const parent = canvas.parentElement;
+                        if(parent) {
+                            width = parent.offsetWidth;
+                            height = parent.offsetHeight;
+                            canvas.width = width;
+                            canvas.height = height;
+                        }
+                    }
+
+                    // --- STYLE 1: NETWORK (ZEN: Very Slow Drift) ---
+                    function initNetwork() {
+                        particles = [];
+                        const count = isMobile ? 30 : 80;
+                        for (let i = 0; i < count; i++) {
+                            particles.push({
+                                x: Math.random() * width,
+                                y: Math.random() * height,
+                                // Slower movement: range from -0.075 to +0.075
+                                vx: (Math.random() - 0.5) * 0.15,
+                                vy: (Math.random() - 0.5) * 0.15,
+                                size: Math.random() * 2 + 1
+                            });
+                        }
+                    }
+
+                    function animateNetwork() {
+                        ctx.clearRect(0, 0, width, height);
+                        const connectionDist = isMobile ? 100 : 150;
+                        const mouseDist = 150;
+
+                        for (let i = 0; i < particles.length; i++) {
+                            let p = particles[i];
+                            p.x += p.vx;
+                            p.y += p.vy;
+
+                            if (p.x < 0) p.x = width; if (p.x > width) p.x = 0;
+                            if (p.y < 0) p.y = height; if (p.y > height) p.y = 0;
+
+                            ctx.beginPath();
+                            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                            ctx.fillStyle = `rgba(${particleColor}, 0.5)`;
+                            ctx.fill();
+
+                            for (let j = i; j < particles.length; j++) {
+                                let p2 = particles[j];
+                                let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                                if (dist < connectionDist) {
+                                    ctx.beginPath();
+                                    ctx.strokeStyle = `rgba(${particleColor}, ${1 - dist/connectionDist})`;
+                                    ctx.lineWidth = 0.5;
+                                    ctx.moveTo(p.x, p.y);
+                                    ctx.lineTo(p2.x, p2.y);
+                                    ctx.stroke();
+                                }
+                            }
+
+                            if (mouse.x != null) {
+                                let dist = Math.hypot(p.x - mouse.x, p.y - mouse.y);
+                                if (dist < mouseDist) {
+                                    ctx.beginPath();
+                                    ctx.strokeStyle = `rgba(${particleColor}, ${1 - dist/mouseDist})`;
+                                    ctx.lineWidth = 1;
+                                    ctx.moveTo(p.x, p.y);
+                                    ctx.lineTo(mouse.x, mouse.y);
+                                    ctx.stroke();
+                                }
+                            }
+                        }
+                    }
+
+                    // --- STYLE 2: MATRIX DIGITAL RAIN (ZEN: Slower Fall) ---
+                    let drops = [];
+                    let fontSize = 14;
+                    function initMatrix() {
+                        fontSize = 14;
+                        const columns = Math.ceil(width / fontSize);
+                        drops = [];
+                        for (let x = 0; x < columns; x++) {
+                            drops[x] = Math.random() * height / fontSize; // Start random
+                        }
+                    }
+                    
+                    function animateMatrix() {
+                        ctx.fillStyle = 'rgba(5, 5, 7, 0.1)'; 
+                        ctx.fillRect(0, 0, width, height);
+                        
+                        ctx.fillStyle = `rgb(${particleColor})`; 
+                        ctx.font = fontSize + 'px monospace';
+
+                        for (let i = 0; i < drops.length; i++) {
+                            const text = String.fromCharCode(0x30A0 + Math.random() * 96); 
+                            // Slower update: Only updating visual text, not every frame drop
+                            // But to slow fall, we use float increment
+                            ctx.fillText(text, i * fontSize, Math.floor(drops[i]) * fontSize);
+
+                            if (drops[i] * fontSize > height && Math.random() > 0.985) { // Lower chance to reset = thinner rain
+                                drops[i] = 0;
+                            }
+                            drops[i] += 0.3; // Much slower fall
+                        }
+                    }
+
+                    // --- STYLE 3: SNOW FALL (ZEN: Floating) ---
+                    function initSnow() {
+                        particles = [];
+                        const count = isMobile ? 50 : 150;
+                        for (let i = 0; i < count; i++) {
+                            particles.push({
+                                x: Math.random() * width,
+                                y: Math.random() * height,
+                                opacity: Math.random(),
+                                speedX: (Math.random() - 0.5) * 0.2, // Drifting sideways slowly
+                                speedY: Math.random() * 0.5 + 0.2, // Very slow fall
+                                radius: Math.random() * 2 + 1
+                            });
+                        }
+                    }
+
+                    function animateSnow() {
+                        ctx.clearRect(0, 0, width, height);
+                        
+                        let wind = 0;
+                        if(mouse.x != null) {
+                            wind = (mouse.x - width/2) * 0.001; // Less wind influence
+                        }
+
+                        for (let i = 0; i < particles.length; i++) {
+                            let p = particles[i];
+                            p.x += p.speedX + wind;
+                            p.y += p.speedY;
+
+                            if (p.y > height) {
+                                p.y = -10;
+                                p.x = Math.random() * width;
+                            }
+                            if (p.x > width) p.x = 0;
+                            if (p.x < 0) p.x = width;
+
+                            ctx.beginPath();
+                            ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+                            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+
+                    // --- STYLE 4: FIREFLIES (ZEN: Slow Pulse) ---
+                    function initFireflies() {
+                        particles = [];
+                        const count = isMobile ? 20 : 50;
+                        for (let i = 0; i < count; i++) {
+                            particles.push({
+                                x: Math.random() * width,
+                                y: Math.random() * height,
+                                vx: (Math.random() - 0.5) * 0.1, // Almost stationary
+                                vy: (Math.random() - 0.5) * 0.1,
+                                size: Math.random() * 3 + 2,
+                                phase: Math.random() * Math.PI * 2,
+                                opacity: 0
+                            });
+                        }
+                    }
+
+                    function animateFireflies() {
+                        ctx.clearRect(0, 0, width, height);
+                        const time = Date.now() * 0.0005; // Very slow pulse
+
+                        for (let i = 0; i < particles.length; i++) {
+                            let p = particles[i];
+                            p.x += p.vx;
+                            p.y += p.vy;
+
+                            if(p.x < -20) p.x = width+20; if(p.x > width+20) p.x = -20;
+                            if(p.y < -20) p.y = height+20; if(p.y > height+20) p.y = -20;
+
+                            let alpha = 0.5 + 0.5 * Math.sin(time + p.phase);
+                            
+                            const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 4);
+                            gradient.addColorStop(0, `rgba(${particleColor}, ${alpha})`);
+                            gradient.addColorStop(1, `rgba(${particleColor}, 0)`);
+                            
+                            ctx.fillStyle = gradient;
+                            ctx.beginPath();
+                            ctx.arc(p.x, p.y, p.size * 4, 0, Math.PI * 2);
+                            ctx.fill();
+                            
+                            ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+                            ctx.beginPath();
+                            ctx.arc(p.x, p.y, p.size * 0.5, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+
+                    // --- STYLE 5: WARP / DEEP SPACE (ZEN: Drifting) ---
+                    function initWarp() {
+                        particles = [];
+                        const count = isMobile ? 150 : 400;
+                        for (let i = 0; i < count; i++) {
+                            particles.push({
+                                x: (Math.random() - 0.5) * width * 2,
+                                y: (Math.random() - 0.5) * height * 2,
+                                z: Math.random() * width,
+                                pz: Math.random() * width // Previous Z for trail
+                            });
+                        }
+                    }
+
+                    function animateWarp() {
+                        ctx.fillStyle = 'rgba(5, 5, 7, 1)'; 
+                        ctx.fillRect(0, 0, width, height);
+                        
+                        const cx = width / 2;
+                        const cy = height / 2;
+                        const speed = 1; // Super slow drift
+
+                        let steerX = 0, steerY = 0;
+                        if (mouse.x != null) {
+                            steerX = (mouse.x - cx) * 0.001; 
+                            steerY = (mouse.y - cy) * 0.001;
+                        }
+
+                        ctx.strokeStyle = `rgb(${particleColor})`;
+                        ctx.lineCap = 'round';
+
+                        for(let i=0; i<particles.length; i++) {
+                            let p = particles[i];
+                            
+                            p.pz = p.z;
+                            p.z -= speed;
+                            p.x -= steerX * (width/p.z);
+                            p.y -= steerY * (width/p.z);
+
+                            if (p.z <= 1) {
+                                p.z = width;
+                                p.pz = width;
+                                p.x = (Math.random() - 0.5) * width * 2;
+                                p.y = (Math.random() - 0.5) * height * 2;
+                            }
+
+                            let sx = (p.x / p.z) * width + cx;
+                            let sy = (p.y / p.z) * width + cy;
+                            
+                            let psx = (p.x / (p.z + speed * 2)) * width + cx; 
+                            let psy = (p.y / (p.z + speed * 2)) * width + cy;
+
+                            let alpha = (1 - (p.z / width));
+                            // Only draw if relatively close or visible
+                            if (alpha > 0) {
+                                ctx.lineWidth = alpha * 2;
+                                ctx.strokeStyle = `rgba(${particleColor}, ${alpha})`;
+
+                                if (sx > 0 && sx < width && sy > 0 && sy < height) {
+                                    ctx.beginPath();
+                                    ctx.moveTo(psx, psy);
+                                    ctx.lineTo(sx, sy);
+                                    ctx.stroke();
+                                }
+                            }
+                        }
+                    }
+
+                    // --- STYLE 6: BUBBLES (ZEN: Lava Lamp) ---
+                    function initBubbles() {
+                        particles = [];
+                        const count = isMobile ? 15 : 40;
+                        for (let i = 0; i < count; i++) {
+                            particles.push({
+                                x: Math.random() * width,
+                                y: height + Math.random() * 200,
+                                radius: Math.random() * 15 + 5,
+                                speed: Math.random() * 0.2 + 0.1, // Extremely slow rise
+                                wobble: Math.random() * Math.PI * 2,
+                                wobbleSpeed: Math.random() * 0.01 + 0.005
+                            });
+                        }
+                    }
+
+                    function animateBubbles() {
+                        ctx.clearRect(0, 0, width, height);
+
+                        for(let i=0; i<particles.length; i++) {
+                            let p = particles[i];
+                            p.y -= p.speed;
+                            p.wobble += p.wobbleSpeed;
+                            
+                            let wobbleX = Math.sin(p.wobble) * 20;
+
+                            if (p.y < -50) {
+                                p.y = height + 50;
+                                p.x = Math.random() * width;
+                            }
+
+                            ctx.beginPath();
+                            ctx.arc(p.x + wobbleX, p.y, p.radius, 0, Math.PI * 2);
+                            ctx.fillStyle = `rgba(${particleColor}, 0.1)`;
+                            ctx.fill();
+                            ctx.strokeStyle = `rgba(${particleColor}, 0.3)`;
+                            ctx.lineWidth = 1;
+                            ctx.stroke();
+
+                            ctx.beginPath();
+                            ctx.arc(p.x + wobbleX - p.radius*0.3, p.y - p.radius*0.3, p.radius*0.2, 0, Math.PI * 2);
+                            ctx.fillStyle = `rgba(255, 255, 255, 0.4)`;
+                            ctx.fill();
+                        }
+                    }
+
+                    // --- STYLE 7: RETRO (ZEN: Slow Grid) ---
+                    function initRetro() { }
+
+                    let retroTime = 0;
+                    function animateRetro() {
+                        ctx.fillStyle = 'rgba(10, 5, 20, 1)';
+                        ctx.fillRect(0, 0, width, height);
+                        retroTime += 0.2; // Slow scroll
+
+                        const horizonY = height * 0.45;
+                        const centerX = width / 2;
+                        
+                        ctx.strokeStyle = `rgb(${particleColor})`;
+                        ctx.lineWidth = 1;
+                        ctx.shadowBlur = 10;
+                        ctx.shadowColor = `rgb(${particleColor})`;
+
+                        const lines = 20;
+                        for(let i = -lines; i <= lines; i++) {
+                            let x1 = centerX + i * 20;
+                            let x2 = centerX + i * 150;
+                            
+                            ctx.beginPath();
+                            ctx.moveTo(x1, horizonY);
+                            ctx.lineTo(x2, height);
+                            ctx.stroke();
+                        }
+
+                        const speed = 1; // Slow lines
+                        const offset = (retroTime * speed) % 100;
+                        
+                        for(let i = 0; i < 20; i++) {
+                            let y = horizonY + (Math.pow((i + (offset/100)), 2.5) * (height-horizonY) / 50);
+
+                            if(y < height && y > horizonY) {
+                                ctx.beginPath();
+                                ctx.moveTo(0, y);
+                                ctx.lineTo(width, y);
+                                ctx.stroke();
+                            }
+                        }
+
+                        const sunGradient = ctx.createLinearGradient(centerX, horizonY - 150, centerX, horizonY);
+                        sunGradient.addColorStop(0, "#facc15");
+                        sunGradient.addColorStop(1, `rgb(${particleColor})`);
+                        
+                        ctx.fillStyle = sunGradient;
+                        ctx.beginPath();
+                        ctx.arc(centerX, horizonY - 50, 60, 0, Math.PI, true);
+                        ctx.fill();
+                        
+                        ctx.fillStyle = 'rgba(10, 5, 20, 1)';
+                        for(let i=0; i<5; i++) {
+                            ctx.fillRect(centerX-70, horizonY - 20 - (i*12), 140, 4);
+                        }
+
+                        ctx.shadowBlur = 0;
+                    }
+
+                    // --- STYLE 8: WAVES (ZEN: Breathing)
+                    function initWaves() {
+                        particles = []; 
+                        for(let i=0; i<3; i++) {
+                            particles.push({
+                                phase: Math.random() * Math.PI * 2,
+                                speed: 0.002 + Math.random() * 0.003, // Breathing speed
+                                amp: 20 + Math.random() * 20,
+                                yOffset: height - 50 + Math.random() * 40
+                            });
+                        }
+                    }
+
+                    function animateWaves() {
+                        ctx.clearRect(0, 0, width, height);
+                        if(particles.length === 0) initWaves();
+
+                        for(let i=0; i<particles.length; i++) {
+                            let wave = particles[i];
+                            wave.phase += wave.speed;
+                            
+                            ctx.beginPath();
+                            ctx.moveTo(0, height); 
+                            
+                            for(let x = 0; x <= width; x+=10) {
+                                let y = wave.yOffset + Math.sin(x * 0.005 + wave.phase) * wave.amp;
+                                ctx.lineTo(x, y);
+                            }
+                            
+                            ctx.lineTo(width, height); 
+                            ctx.closePath();
+                            
+                            ctx.fillStyle = `rgba(${particleColor}, 0.1)`;
+                            ctx.fill();
+                            
+                            ctx.strokeStyle = `rgba(${particleColor}, 0.3)`;
+                            ctx.lineWidth = 1;
+                            ctx.stroke();
+                        }
+                    }
+
+                    // STYLE 9: BOKEH (ZEN: Floating Light)
+                    function initBokeh() {
+                        particles = [];
+                        const count = isMobile ? 10 : 25;
+                        for(let i=0; i<count; i++) {
+                            particles.push({
+                                x: Math.random() * width,
+                                y: Math.random() * height,
+                                radius: 50 + Math.random() * 100, 
+                                vx: (Math.random() - 0.5) * 0.05, // Barely moving
+                                vy: (Math.random() - 0.5) * 0.05,
+                                color: Math.random() > 0.5 ? particleColor : "255, 255, 255",
+                                opacity: 0.05 + Math.random() * 0.1
+                            });
+                        }
+                    }
+
+                    function animateBokeh() {
+                        ctx.clearRect(0, 0, width, height);
+                        
+                        for(let i=0; i<particles.length; i++) {
+                            let p = particles[i];
+                            p.x += p.vx;
+                            p.y += p.vy;
+                            
+                            if(p.x < -p.radius) p.x = width + p.radius;
+                            if(p.x > width + p.radius) p.x = -p.radius;
+                            if(p.y < -p.radius) p.y = height + p.radius;
+                            if(p.y > height + p.radius) p.y = -p.radius;
+                            
+                            const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+                            gradient.addColorStop(0, `rgba(${p.color}, ${p.opacity})`);
+                            gradient.addColorStop(1, `rgba(${p.color}, 0)`);
+                            
+                            ctx.fillStyle = gradient;
+                            ctx.beginPath();
+                            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                    }
+
+                    // STYLE 10: RAIN (ZEN: Mist / Very Light Drizzle)
+                    function initRain() {
+                        particles = [];
+                        // Deutlich weniger Tropfen
+                        const count = isMobile ? 20 : 60; 
+                        for(let i=0; i<count; i++) {
+                            particles.push({
+                                x: Math.random() * width,
+                                y: Math.random() * height,
+                                // Viel kürzere Tropfen (eher wie Staub/Nebel)
+                                l: 2 + Math.random() * 5, 
+                                // Sehr langsame Geschwindigkeit
+                                v: 0.5 + Math.random() * 1,   
+                                // Sehr geringe Deckkraft (kaum sichtbar)
+                                o: 0.05 + Math.random() * 0.1 
+                            });
+                        }
+                    }
+
+                    function animateRain() {
+                        ctx.clearRect(0, 0, width, height);
+                        
+                        let wind = 0;
+                        if(mouse.x != null) {
+                            wind = (mouse.x - width/2) * 0.002; // Weniger Windeinfluss
+                        }
+
+                        ctx.lineWidth = 1;
+                        ctx.lineCap = 'round';
+
+                        for(let i=0; i<particles.length; i++) {
+                            let p = particles[i];
+                            p.y += p.v;
+                            p.x += wind; 
+                            
+                            if(p.y > height) {
+                                p.y = -10;
+                                p.x = Math.random() * width;
+                            }
+                            if(p.x > width) p.x = 0;
+                            if(p.x < 0) p.x = width;
+
+                            ctx.strokeStyle = `rgba(255, 255, 255, ${p.o})`;
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(p.x + wind, p.y + p.l);
+                            ctx.stroke();
+                        }
+                    }
+
+
+                    // --- MASTER INIT & LOOP ---
+                    function init() {
+                        resize();
+                        if (style === 'matrix') initMatrix();
+                        else if (style === 'snow') initSnow();
+                        else if (style === 'fireflies') initFireflies();
+                        else if (style === 'warp') initWarp();
+                        else if (style === 'bubbles') initBubbles();
+                        else if (style === 'retro') initRetro();
+                        else if (style === 'waves') initWaves();
+                        else if (style === 'bokeh') initBokeh();
+                        else if (style === 'rain') initRain();
+                        else initNetwork(); // Default
+                    }
+
+                    function animate() {
+                        if (style === 'matrix') animateMatrix();
+                        else if (style === 'snow') animateSnow();
+                        else if (style === 'fireflies') animateFireflies();
+                        else if (style === 'warp') animateWarp();
+                        else if (style === 'bubbles') animateBubbles();
+                        else if (style === 'retro') animateRetro();
+                        else if (style === 'waves') animateWaves();
+                        else if (style === 'bokeh') animateBokeh();
+                        else if (style === 'rain') animateRain();
+                        else animateNetwork();
+                        
+                        requestAnimationFrame(animate);
+                    }
+
+                    window.addEventListener('resize', () => {
+                        resize();
+                        init();
+                    });
+
+                    // Start
+                    init();
+                    animate();
+                }
+            } else {
+                const canvasWrapper = document.getElementById('hero-canvas-wrapper');
+                if (canvasWrapper) canvasWrapper.style.display = 'none';
+            }
+        } catch(e) { console.warn("Canvas Logic Error:", e); }
+
+        // ========== SCOPE 5: DISCORD ONLINE COUNT ==========
+        try {
+            const discordCounter = document.getElementById('discord-counter');
+            
+            // Animation Helper
+            function animateValue(obj, start, end, duration) {
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    // EaseOutExpo for a nice "pop" effect
+                    const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                    obj.innerText = Math.floor(ease * (end - start) + start);
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    }
+                };
+                window.requestAnimationFrame(step);
+            }
+
+            if (discordCounter) {
+                // -----------------------------------------------------------
+                // WICHTIG: HIER DEINE ID EINTRAGEN!
+                // 1. Discord öffnen -> Servereinstellungen -> Widget
+                // 2. "Widget aktivieren" muss AN sein.
+                // 3. "Server-ID" kopieren und unten bei '...' einfügen.
+                // -----------------------------------------------------------
+                const guildId = '1300546072472588469'; // <--- HIER DEINE ID REINKOPIEREN
+                
+                if (guildId.trim() === '1300546072472588469' || guildId.trim() === '') {
+                    // console.error("SETUP FEHLER: Du musst die 'guildId' im HTML-Code ändern!"); // REMOVED ERROR LOG
+                    discordCounter.innerText = "5463"; 
+                    discordCounter.style.color = "orange";
+                } else {
+                    fetch(`https://discord.com/api/guilds/${guildId}/widget.json`)
+                        .then(response => {
+                            if (!response.ok) throw new Error(`API Error ${response.status}`);
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data && typeof data.presence_count !== 'undefined') {
+                                // discordCounter.innerText = data.presence_count; // Old static way
+                                animateValue(discordCounter, 0, data.presence_count, 2000); // New animated way
+                                discordCounter.style.color = ""; 
+                            } else {
+                                console.warn("Discord Widget: Keine Mitgliederzahl gefunden.", data);
+                                discordCounter.innerText = "0";
+                            }
+                        })
+                        .catch(err => {
+                            console.error("Discord Widget Error:", err);
+                            discordCounter.innerText = "Err";
+                            discordCounter.style.fontSize = "0.8rem";
+                        });
+                }
+            }
+        } catch(e) { console.warn("Discord Logic Error:", e); }
+    });
 </script>
+<!-- ENDE NEU -->
 
 {% endblock %}
